@@ -20,11 +20,11 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-x-0 top-0 z-50"
+      className="fixed inset-x-0 top-0 z-50 transform-gpu [backface-visibility:hidden]"
     >
-      <nav className="mx-auto mt-3 flex max-w-7xl items-center justify-between rounded-full px-5 py-3 glass md:mt-5 md:px-8">
+      <nav className="mx-3 mt-3 flex h-12 max-w-6xl items-center justify-between rounded-full border border-gold/15 bg-[#160b1c]/70 px-4 [backface-visibility:hidden] [transform:translateZ(0)] [backdrop-filter:blur(10px)] md:mx-auto md:mt-4 md:h-14 md:px-7">
         <a href="#home" className="flex items-center gap-2">
-          <span className="font-display text-2xl font-semibold tracking-wide text-gold-gradient">
+          <span className="font-display text-xl font-semibold tracking-wide text-gold-gradient md:text-2xl">
             Labhonitta
           </span>
           <span className="hidden text-[10px] uppercase tracking-[0.35em] text-rose/70 sm:block">
@@ -73,7 +73,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mx-auto mt-2 max-w-7xl overflow-hidden rounded-3xl px-6 py-4 glass md:hidden"
+            className="mx-3 mt-2 overflow-hidden rounded-3xl px-6 py-4 glass md:hidden"
           >
             {LINKS.map((l) => (
               <li key={l.href}>

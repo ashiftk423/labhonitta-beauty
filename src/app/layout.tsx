@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import Intro from "@/components/Intro";
@@ -33,6 +33,13 @@ export const metadata: Metadata = {
     description: "Bridal & artist makeup, hair cutting and treatments in Thrissur.",
     type: "website",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#0d0610",
 };
 
 export default function RootLayout({

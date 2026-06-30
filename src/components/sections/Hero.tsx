@@ -26,7 +26,7 @@ export default function Hero() {
         variants={fade}
         initial="hidden"
         animate="show"
-        className="mb-5 text-xs uppercase tracking-[0.5em] text-rose/80"
+        className="mb-5 max-w-[90vw] text-balance px-2 text-[10px] uppercase tracking-[0.25em] text-rose/80 sm:text-xs sm:tracking-[0.5em]"
       >
         Thrissur · Kerala · Since the heart of bridal artistry
       </motion.p>

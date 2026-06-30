@@ -17,7 +17,7 @@ export default function MakeoverWheel({
   value,
   onChange,
   icon,
-  autoPlay = true,
+  autoPlay = false,
   active = true,
 }: {
   items: WheelItem[];
@@ -208,8 +208,8 @@ export default function MakeoverWheel({
         </div>
       </div>
 
-      <p className="hidden text-[10px] uppercase tracking-[0.35em] text-cream/45 lg:block">
-        ◍ Spin · auto every 5s
+      <p className="max-w-[130px] animate-pulse text-center text-[9px] uppercase leading-tight tracking-[0.18em] text-gold/70 lg:max-w-none lg:text-[10px] lg:tracking-[0.28em]">
+        ✨ Spin me to see the transformation
       </p>
     </div>
   );
