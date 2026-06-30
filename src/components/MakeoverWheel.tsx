@@ -32,14 +32,15 @@ export default function MakeoverWheel({
   const n = items.length;
   const seg = 360 / n;
 
+  const rootRef = useRef<HTMLDivElement>(null);
   const discRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(-value * seg);
   const [dragging, setDragging] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(min-width: 1024px)").matches
-  );
+  const [mounted, setMounted] = useState(false);
+  // From tablet up (>=768px) the wheel sits inline below the text and is always
+  // visible. Below that it floats in the corner with scroll-driven opacity.
+  const [isInline, setIsInline] = useState(false);
+  const [onScreen, setOnScreen] = useState(false);
 
   const rotationRef = useRef(rotation);
   const lastAngleRef = useRef(0);
@@ -48,10 +49,25 @@ export default function MakeoverWheel({
   valueRef.current = value;
 
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const onChange = () => setIsDesktop(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
+    setMounted(true);
+    const mq = window.matchMedia("(min-width: 768px)");
+    const sync = () => setIsInline(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  // Track whether this wheel is on screen, so the global arrow keys only drive
+  // the wheel the user is currently looking at.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => setOnScreen(e.isIntersecting),
+      { threshold: 0.4 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const norm = (i: number) => ((i % n) + n) % n;
@@ -136,23 +152,54 @@ export default function MakeoverWheel({
     step(e.deltaY > 0 ? 1 : -1);
   };
 
-  const floatStyle = isDesktop
-    ? undefined
-    : {
-        opacity: visibility,
-        transform: `translateY(${(1 - visibility) * 22}px)`,
-        pointerEvents: (visibility > 0.05 ? "auto" : "none") as "auto" | "none",
-      };
+  // Global ←/→ arrow navigation — active for whichever wheel is on screen.
+  useEffect(() => {
+    if (!onScreen) return;
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (
+        t &&
+        (t.tagName === "INPUT" ||
+          t.tagName === "TEXTAREA" ||
+          t.isContentEditable)
+      )
+        return;
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+        e.preventDefault();
+        step(1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+        e.preventDefault();
+        step(-1);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onScreen, value, n]);
+
+  // Floating opacity/slide only applies on phones (< md). On tablet/desktop the
+  // wheel is inline and always fully visible, so no inline style overrides it.
+  const floatStyle =
+    mounted && !isInline
+      ? {
+          opacity: visibility,
+          transform: `translateY(${(1 - visibility) * 22}px)`,
+          pointerEvents: (visibility > 0.05 ? "auto" : "none") as
+            | "auto"
+            | "none",
+        }
+      : undefined;
 
   return (
     <div
+      ref={rootRef}
       style={floatStyle}
       className={[
         "z-40 flex select-none flex-col items-center gap-2",
-        // --- mobile: floating glassy dial, bottom-right, above the sound btn ---
+        // --- phones (< md): floating glassy dial, bottom-right, above sound btn ---
         "fixed bottom-[88px] right-3 rounded-[28px] border border-gold/20 bg-white/[0.06] p-2.5 backdrop-blur-md transition-[opacity,transform] duration-300 ease-out",
-        // --- desktop (lg+): inline in the column, no floating chrome ---
-        "lg:pointer-events-auto lg:static lg:bottom-auto lg:right-auto lg:z-auto lg:translate-y-0 lg:gap-3 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:opacity-100 lg:backdrop-blur-none",
+        // --- tablet & desktop (md+): inline in the column, no floating chrome ---
+        "md:pointer-events-auto md:static md:bottom-auto md:right-auto md:z-auto md:translate-y-0 md:gap-3 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:backdrop-blur-none",
       ].join(" ")}
     >
       <div className="relative h-[112px] w-[112px] sm:h-[132px] sm:w-[132px] lg:h-[200px] lg:w-[200px]">
