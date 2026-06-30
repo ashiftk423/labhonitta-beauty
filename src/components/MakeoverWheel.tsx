@@ -18,12 +18,16 @@ export default function MakeoverWheel({
   onChange,
   icon,
   autoPlay = true,
+  active = true,
 }: {
   items: WheelItem[];
   value: number;
   onChange: (i: number) => void;
   icon?: ReactNode;
   autoPlay?: boolean;
+  /** Whether the owning section is in view. Drives mobile floating visibility
+   *  and gates the auto-spin so off-screen wheels stay silent. */
+  active?: boolean;
 }) {
   const n = items.length;
   const seg = 360 / n;
@@ -35,8 +39,10 @@ export default function MakeoverWheel({
   const rotationRef = useRef(rotation);
   const lastAngleRef = useRef(0);
   const valueRef = useRef(value);
+  const activeRef = useRef(active);
   rotationRef.current = rotation;
   valueRef.current = value;
+  activeRef.current = active;
 
   const norm = (i: number) => ((i % n) + n) % n;
 
@@ -57,11 +63,11 @@ export default function MakeoverWheel({
     setRotation(target);
   }, [value, seg, dragging]);
 
-  // Auto-spin every 5 s — wheel + image advance together.
+  // Auto-spin every 5 s — only while the section is in view.
   useEffect(() => {
     if (!autoPlay || n < 2) return;
     const id = window.setInterval(() => {
-      if (dragging || document.hidden) return;
+      if (dragging || document.hidden || !activeRef.current) return;
       emit(norm(valueRef.current + 1), false);
     }, AUTO_MS);
     return () => window.clearInterval(id);
@@ -124,8 +130,19 @@ export default function MakeoverWheel({
   };
 
   return (
-    <div className="flex flex-col items-center gap-3 select-none">
-      <div className="relative h-[clamp(150px,38vw,210px)] w-[clamp(150px,38vw,210px)]">
+    <div
+      className={[
+        "z-40 flex select-none flex-col items-center gap-2",
+        // --- mobile: floating glassy dial, bottom-right, above the sound btn ---
+        "fixed bottom-[88px] right-3 rounded-[28px] border border-gold/20 bg-white/[0.06] p-2.5 backdrop-blur-md transition-all duration-500",
+        active
+          ? "translate-y-0 opacity-90 pointer-events-auto"
+          : "pointer-events-none translate-y-6 opacity-0",
+        // --- desktop (lg+): inline in the column, no floating chrome ---
+        "lg:pointer-events-auto lg:static lg:bottom-auto lg:right-auto lg:z-auto lg:translate-y-0 lg:gap-3 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:opacity-100 lg:backdrop-blur-none",
+      ].join(" ")}
+    >
+      <div className="relative h-[112px] w-[112px] sm:h-[132px] sm:w-[132px] lg:h-[200px] lg:w-[200px]">
         <div className="absolute left-1/2 top-[-2px] z-30 h-0 w-0 -translate-x-1/2 border-l-[9px] border-r-[9px] border-t-[14px] border-l-transparent border-r-transparent border-t-gold drop-shadow-[0_0_6px_rgba(233,201,139,0.9)]" />
 
         <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,#e9c98b,#d9a273,#e8a6b8,#3a1430,#e9c98b)] p-[2px] shadow-[0_0_40px_-10px_rgba(217,162,115,0.8)]">
@@ -191,7 +208,7 @@ export default function MakeoverWheel({
         </div>
       </div>
 
-      <p className="text-[10px] uppercase tracking-[0.35em] text-cream/45">
+      <p className="hidden text-[10px] uppercase tracking-[0.35em] text-cream/45 lg:block">
         ◍ Spin · auto every 5s
       </p>
     </div>

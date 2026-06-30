@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { sound } from "@/lib/sound";
 import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 
@@ -13,16 +13,30 @@ const LOOKS: (WheelItem & { src: string; tag: string })[] = [
 ];
 
 export default function MakeupTransformation() {
+  const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  const [inView, setInView] = useState(false);
 
   const pickLook = (i: number) => {
     setActive(i);
     sound.sparkle();
   };
 
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => setInView(e.isIntersecting),
+      { threshold: 0.35 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <section
       id="bridal"
+      ref={root}
       className="relative flex min-h-[100svh] items-center justify-center px-6 py-24"
     >
       <div className="grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
@@ -47,12 +61,13 @@ export default function MakeupTransformation() {
             </p>
           </div>
 
-          <div className="mt-7">
+          <div className="lg:mt-7">
             <MakeoverWheel
               items={LOOKS}
               value={active}
               onChange={pickLook}
               icon="💄"
+              active={inView}
             />
           </div>
         </div>

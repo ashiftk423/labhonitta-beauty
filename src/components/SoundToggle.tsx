@@ -23,7 +23,7 @@ export default function SoundToggle() {
       aria-label={muted ? "Turn sound on" : "Turn sound off"}
       aria-pressed={!muted}
       onClick={() => sound.toggle()}
-      className="fixed bottom-5 right-5 z-[120] flex h-12 w-12 items-center justify-center rounded-full glass transition-transform hover:scale-110 active:scale-95"
+      className="fixed bottom-5 left-5 z-[120] flex h-12 w-12 items-center justify-center rounded-full glass transition-transform hover:scale-110 active:scale-95"
     >
       <span className="flex h-5 items-end gap-[3px]">
         {[0, 1, 2, 3].map((i) => (
