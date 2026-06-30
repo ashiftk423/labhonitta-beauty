@@ -56,11 +56,12 @@ export default function MakeoverWheel({
 
   const norm = (i: number) => ((i % n) + n) % n;
 
-  const emit = (idx: number, fromUser: boolean) => {
+  const emit = (idx: number, fromUser: boolean, silent = false) => {
     if (idx === valueRef.current) return;
     onChange(idx);
     if (fromUser) hapticSnap();
     else hapticTick();
+    if (!silent) sound.tick();
   };
 
   // Sync dial angle when value changes (auto or external).
@@ -78,7 +79,7 @@ export default function MakeoverWheel({
     if (!autoPlay || n < 2) return;
     const id = window.setInterval(() => {
       if (dragging || document.hidden) return;
-      emit(norm(valueRef.current + 1), false);
+      emit(norm(valueRef.current + 1), false, true);
     }, AUTO_MS);
     return () => window.clearInterval(id);
   }, [autoPlay, n, dragging]);
@@ -113,11 +114,7 @@ export default function MakeoverWheel({
     lastAngleRef.current = a;
     setRotation(rotationRef.current + d);
     const idx = norm(Math.round(-(rotationRef.current + d) / seg));
-    if (idx !== valueRef.current) {
-      onChange(idx);
-      hapticTick();
-      sound.tick();
-    }
+    if (idx !== valueRef.current) emit(idx, false);
   };
 
   const endDrag = () => {

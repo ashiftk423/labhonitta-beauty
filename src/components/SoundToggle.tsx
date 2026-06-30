@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { sound } from "@/lib/sound";
 
 /**
- * Floating sound control (bottom-right). Sound is OFF until the user clicks it,
- * which satisfies browser autoplay rules and keeps the experience accessible.
+ * Floating sound control (bottom-left). Enables wheel spin ticks only — no ambient.
  */
 export default function SoundToggle() {
   const [muted, setMuted] = useState(true);

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { sound } from "@/lib/sound";
 import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
 
@@ -19,7 +18,6 @@ export default function HairStudio() {
 
   const pickStyle = (i: number) => {
     setActive(i);
-    sound.snip();
   };
 
   return (
