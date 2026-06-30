@@ -41,12 +41,26 @@ export default function MakeoverWheel({
   // visible. Below that it floats in the corner with scroll-driven opacity.
   const [isInline, setIsInline] = useState(false);
   const [onScreen, setOnScreen] = useState(false);
+  const [kbSpinning, setKbSpinning] = useState(false);
 
   const rotationRef = useRef(rotation);
   const lastAngleRef = useRef(0);
   const valueRef = useRef(value);
+  const kbHintTimerRef = useRef<number | null>(null);
   rotationRef.current = rotation;
   valueRef.current = value;
+
+  const flashKbHint = () => {
+    setKbSpinning(true);
+    if (kbHintTimerRef.current) window.clearTimeout(kbHintTimerRef.current);
+    kbHintTimerRef.current = window.setTimeout(() => setKbSpinning(false), 2800);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (kbHintTimerRef.current) window.clearTimeout(kbHintTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -152,7 +166,23 @@ export default function MakeoverWheel({
     step(e.deltaY > 0 ? 1 : -1);
   };
 
-  // Global ←/→ arrow navigation — active for whichever wheel is on screen.
+  const spinFromKeyboard = (dir: number) => {
+    flashKbHint();
+    step(dir);
+  };
+
+  const handleDiscKeyDown = (e: React.KeyboardEvent) => {
+    if (!e.shiftKey) return;
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+      e.preventDefault();
+      spinFromKeyboard(1);
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+      e.preventDefault();
+      spinFromKeyboard(-1);
+    }
+  };
+
+  // Shift + arrows spin the wheel. Plain arrows keep scrolling the page.
   useEffect(() => {
     if (!onScreen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -164,12 +194,14 @@ export default function MakeoverWheel({
           t.isContentEditable)
       )
         return;
+      if (!e.shiftKey) return;
+
       if (e.key === "ArrowRight" || e.key === "ArrowUp") {
         e.preventDefault();
-        step(1);
+        spinFromKeyboard(1);
       } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
         e.preventDefault();
-        step(-1);
+        spinFromKeyboard(-1);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -223,10 +255,7 @@ export default function MakeoverWheel({
           onPointerLeave={endDrag}
           onPointerCancel={endDrag}
           onWheel={onWheel}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowRight" || e.key === "ArrowUp") step(1);
-            if (e.key === "ArrowLeft" || e.key === "ArrowDown") step(-1);
-          }}
+          onKeyDown={handleDiscKeyDown}
           className="absolute inset-[8px] cursor-grab touch-none rounded-full active:cursor-grabbing focus:outline-none"
           style={{
             transform: `rotate(${rotation}deg)`,
@@ -271,6 +300,39 @@ export default function MakeoverWheel({
       <p className="max-w-[130px] animate-pulse text-center text-[9px] uppercase leading-tight tracking-[0.18em] text-gold/70 lg:max-w-none lg:text-[10px] lg:tracking-[0.28em]">
         ✨ Spin me to see the transformation
       </p>
+
+      {/* Keyboard shortcut hint — always on tablet/desktop, pulses while spinning */}
+      <div
+        className={[
+          "hidden flex-col items-center gap-1.5 text-center transition-all duration-300 md:flex",
+          kbSpinning ? "scale-105 opacity-100" : "opacity-70",
+        ].join(" ")}
+        aria-live="polite"
+      >
+        <p
+          className={[
+            "text-[10px] uppercase tracking-[0.22em] transition-colors duration-300",
+            kbSpinning ? "text-gold" : "text-cream/45",
+          ].join(" ")}
+        >
+          {kbSpinning ? "Spinning look" : "Keyboard shortcut"}
+        </p>
+        <p className="flex flex-wrap items-center justify-center gap-1.5 text-[11px] text-cream/60">
+          <kbd className="rounded border border-gold/25 bg-white/5 px-1.5 py-0.5 font-mono text-[10px] text-gold/90">
+            Shift
+          </kbd>
+          <span className="text-cream/35">+</span>
+          <kbd className="rounded border border-gold/25 bg-white/5 px-1.5 py-0.5 font-mono text-[10px] text-gold/90">
+            ← →
+          </kbd>
+          <span className="text-cream/35">to spin</span>
+        </p>
+        {kbSpinning && (
+          <p className="text-[10px] text-cream/50">
+            Arrow keys alone scroll the page
+          </p>
+        )}
+      </div>
     </div>
   );
 }
