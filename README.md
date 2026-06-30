@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Labhonitta — Ladies Beauty Parlour (Premium 3D Website)
 
-## Getting Started
+An immersive, game-like 3D website for **Labhonitta Ladies Beauty Parlour**,
+Thrissur. Built for buttery scroll-driven storytelling: a live golden-dust 3D
+backdrop, a pinned bridal **before → after** reveal, and a scroll-scrubbed
+**hair-cutting** animation. Fully responsive (mobile / tablet / desktop) and
+tuned for 60fps.
 
-First, run the development server:
+## Tech stack
+
+| Concern              | Library                                   |
+| -------------------- | ----------------------------------------- |
+| Framework            | Next.js 16 (App Router) + TypeScript      |
+| Styling              | Tailwind CSS v4                           |
+| 3D / WebGL           | three.js · @react-three/fiber · drei      |
+| Post-processing      | @react-three/postprocessing (Bloom)       |
+| Scroll animation     | GSAP + ScrollTrigger                      |
+| Smooth scrolling     | Lenis                                     |
+| UI motion            | Framer Motion                             |
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+  app/
+    layout.tsx        fonts (Cormorant + Inter), metadata, SmoothScroll
+    page.tsx          section composition
+    globals.css       design tokens + luxury theme
+  lib/
+    gsap.ts           gsap + ScrollTrigger singleton
+  components/
+    SmoothScroll.tsx  Lenis ↔ GSAP sync
+    BackgroundCanvas.tsx   client-only loader for the 3D scene
+    Navbar.tsx · Footer.tsx
+    three/
+      Scene.tsx       fixed WebGL canvas + Bloom/Vignette
+      GoldenDust.tsx  GPU particle field
+      FloatingOrbs.tsx liquid rose-gold spheres
+    sections/
+      Hero.tsx
+      Services.tsx
+      MakeupTransformation.tsx   ← pinned before/after reveal
+      HairStudio.tsx             ← scroll-scrubbed haircut
+      Gallery.tsx
+      Contact.tsx                ← WhatsApp booking + real details
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Add your real photos
 
-## Learn More
+See `public/images/README.txt`. Drop `bride-before.jpg` and `bride-after.jpg`
+(3:4 portraits) and the transformation reveal uses them automatically.
 
-To learn more about Next.js, take a look at the following resources:
+## Where to go next
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See **PLAN.md** for the roadmap and **PROMPTS.md** for ready-to-paste prompts
+to extend the site (real 3D model, image-sequence scrubbing, more sections).
