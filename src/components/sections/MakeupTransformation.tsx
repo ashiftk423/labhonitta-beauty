@@ -1,127 +1,79 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { useState } from "react";
+import { sound } from "@/lib/sound";
+import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 
-/**
- * Pinned, scroll-scrubbed transformation. As the user scrolls through this
- * section it stays fixed while the "after" (full glam) layer wipes across the
- * "before" layer via clip-path — like a living before/after reveal.
- *
- * Drop real photos at:  /public/images/bride-before.jpg  +  bride-after.jpg
- * (any 3:4 portrait). Until then, layered gradients stand in gracefully.
- */
+const LOOKS: (WheelItem & { src: string; tag: string })[] = [
+  { src: "/images/bride-after.webp", label: "Signature Bridal", tag: "HD bridal glam", color: "#e9c98b" },
+  { src: "/images/look-1.webp", label: "Classic Red Bridal", tag: "Traditional · temple gold", color: "#c0392b" },
+  { src: "/images/look-2.webp", label: "Rose Romance", tag: "Soft dewy party glam", color: "#e8a6b8" },
+  { src: "/images/look-3.webp", label: "Golden Reception", tag: "Bronze & champagne", color: "#d9a273" },
+  { src: "/images/look-4.webp", label: "Bold Modern Diva", tag: "Editorial smokey", color: "#7a2e4a" },
+];
+
 export default function MakeupTransformation() {
-  const root = useRef<HTMLDivElement>(null);
-  const afterLayer = useRef<HTMLDivElement>(null);
-  const handle = useRef<HTMLDivElement>(null);
-  const beforeLabel = useRef<HTMLSpanElement>(null);
-  const afterLabel = useRef<HTMLSpanElement>(null);
+  const [active, setActive] = useState(0);
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top top",
-          end: "+=140%",
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-        },
-      });
-
-      tl.fromTo(
-        afterLayer.current,
-        { clipPath: "inset(0 100% 0 0)" },
-        { clipPath: "inset(0 0% 0 0)", ease: "none" },
-        0
-      )
-        .fromTo(handle.current, { left: "0%" }, { left: "100%", ease: "none" }, 0)
-        .to(beforeLabel.current, { opacity: 0, duration: 0.3 }, 0.2)
-        .fromTo(
-          afterLabel.current,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.3 },
-          0.5
-        );
-    }, root);
-
-    return () => ctx.revert();
-  }, []);
+  const pickLook = (i: number) => {
+    setActive(i);
+    sound.sparkle();
+  };
 
   return (
     <section
       id="bridal"
-      ref={root}
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6"
+      className="relative flex min-h-[100svh] items-center justify-center px-6 py-24"
     >
-      <div className="grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
-        <div>
+      <div className="grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
           <span className="text-xs uppercase tracking-[0.4em] text-rose/80">
-            The Bridal Reveal
+            The Bridal Lookbook
           </span>
           <h2 className="mt-3 font-display text-4xl font-light leading-tight sm:text-6xl">
-            From <span className="text-cream">bare</span> to{" "}
-            <span className="text-gold-gradient">breathtaking</span>
+            One muse, <span className="text-gold-gradient">infinite looks</span>
           </h2>
           <p className="mt-5 max-w-md text-cream/65">
-            Scroll slowly and watch a complete bridal transformation unfold —
-            base, contour, eyes, lips and the final glow, revealed stroke by
-            stroke just as it happens on the chair.
+            Spin the makeover wheel to glide through our signature
+            transformations — from classic red bridal to bold editorial glam.
           </p>
-          <p className="mt-8 text-sm text-cream/45">
-            ✦ Keep scrolling to complete the look
-          </p>
+
+          <div className="mt-6">
+            <p className="font-display text-2xl leading-none text-gold-gradient">
+              {LOOKS[active].label}
+            </p>
+            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-cream/50">
+              {LOOKS[active].tag}
+            </p>
+          </div>
+
+          <div className="mt-7">
+            <MakeoverWheel
+              items={LOOKS}
+              value={active}
+              onChange={pickLook}
+              icon="💄"
+            />
+          </div>
         </div>
 
-        {/* Before / After stage */}
-        <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]">
-          {/* BEFORE layer */}
+        <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]">
+          {LOOKS.map((l, i) => (
+            <div
+              key={l.src}
+              className="absolute inset-0 bg-cover bg-center transition-opacity duration-[900ms] ease-out"
+              style={{
+                backgroundImage: `url(${l.src})`,
+                opacity: i === active ? 1 : 0,
+                animation: i === active ? "kenburns 7s ease-out forwards" : "none",
+              }}
+            />
+          ))}
           <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "linear-gradient(160deg,#2b2230,#473041 60%,#5a4150), url(/images/bride-before.jpg)",
-              backgroundBlendMode: "overlay",
-            }}
-          >
-            <span
-              ref={beforeLabel}
-              className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-1 text-xs uppercase tracking-widest text-cream/80"
-            >
-              Before
-            </span>
-          </div>
-
-          {/* AFTER layer (clipped) */}
-          <div
-            ref={afterLayer}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              clipPath: "inset(0 100% 0 0)",
-              backgroundImage:
-                "linear-gradient(160deg,#e8a6b8,#d9a273 45%,#f6e3b8), url(/images/bride-after.jpg)",
-              backgroundBlendMode: "overlay",
-            }}
-          >
-            <span
-              ref={afterLabel}
-              className="absolute right-4 top-4 rounded-full bg-[#1a0a14]/60 px-3 py-1 text-xs uppercase tracking-widest text-gold"
-            >
-              After
-            </span>
-          </div>
-
-          {/* divider handle */}
-          <div
-            ref={handle}
-            className="absolute top-0 z-10 h-full w-[2px] -translate-x-1/2 bg-gold/90 shadow-[0_0_20px_rgba(233,201,139,0.9)]"
-          >
-            <span className="absolute top-1/2 left-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-gold text-xs text-[#1a0a14]">
-              ↔
-            </span>
-          </div>
+            key={active}
+            className="pointer-events-none absolute inset-0 z-10"
+            style={{ animation: "sheen 1s ease-out forwards" }}
+          />
         </div>
       </div>
     </section>

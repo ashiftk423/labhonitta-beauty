@@ -1,5 +1,6 @@
 import BackgroundCanvas from "@/components/BackgroundCanvas";
 import Navbar from "@/components/Navbar";
+import SoundToggle from "@/components/SoundToggle";
 import Hero from "@/components/sections/Hero";
 import Services from "@/components/sections/Services";
 import MakeupTransformation from "@/components/sections/MakeupTransformation";
@@ -13,6 +14,7 @@ export default function Home() {
     <>
       <BackgroundCanvas />
       <Navbar />
+      <SoundToggle />
       <main className="relative z-10">
         <Hero />
         <Services />

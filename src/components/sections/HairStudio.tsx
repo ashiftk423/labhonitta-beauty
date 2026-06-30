@@ -1,146 +1,84 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { useState } from "react";
+import { sound } from "@/lib/sound";
+import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 
-const STRANDS = 26;
+const STYLES: (WheelItem & { src: string; tag: string })[] = [
+  { src: "/images/hair-long.webp", label: "Long Layers", tag: "Soft natural waves", color: "#3a2218" },
+  { src: "/images/hair-styled.webp", label: "Styled Lob", tag: "Sleek salon blowout", color: "#5a2b22" },
+  { src: "/images/hair-straight.webp", label: "Sleek Straight", tag: "Glossy & smooth", color: "#241016" },
+  { src: "/images/hair-curls.webp", label: "Bouncy Curls", tag: "Voluminous ringlets", color: "#2a1810" },
+  { src: "/images/hair-updo.webp", label: "Caramel Updo", tag: "Balayage colour", color: "#8a5a2b" },
+];
 
-/**
- * Pinned hair-cutting sequence. Long strands retract to a styled bob as the
- * user scrolls, scissors glide across the cut line, and trimmed pieces fall.
- * Entirely SVG + GSAP — sharp at any resolution, light on the GPU.
- */
 export default function HairStudio() {
-  const root = useRef<HTMLDivElement>(null);
-  const scissors = useRef<SVGGElement>(null);
+  const [active, setActive] = useState(0);
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top top",
-          end: "+=160%",
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-        },
-      });
-
-      // each strand retracts to a wavy bob length
-      gsap.utils.toArray<SVGRectElement>(".strand").forEach((s, i) => {
-        const target = 70 + Math.sin(i * 0.5) * 18; // styled bob line
-        tl.to(
-          s,
-          { attr: { height: target }, ease: "none" },
-          gsap.utils.mapRange(0, STRANDS, 0, 0.8, i)
-        );
-        // falling trimmed piece
-        tl.fromTo(
-          `.fall-${i}`,
-          { y: 0, opacity: 0.9 },
-          { y: 260, opacity: 0, ease: "power1.in" },
-          gsap.utils.mapRange(0, STRANDS, 0, 0.8, i)
-        );
-      });
-
-      // scissors travel across the cut line
-      tl.fromTo(
-        scissors.current,
-        { x: -40, rotation: -8, transformOrigin: "center" },
-        { x: 360, rotation: 8, ease: "none" },
-        0
-      );
-    }, root);
-
-    return () => ctx.revert();
-  }, []);
+  const pickStyle = (i: number) => {
+    setActive(i);
+    sound.snip();
+  };
 
   return (
     <section
       id="hair"
-      ref={root}
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6"
+      className="relative flex min-h-[100svh] items-center justify-center px-6 py-24"
     >
-      <div className="grid w-full max-w-6xl items-center gap-10 lg:grid-cols-2">
+      <div className="grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
         <div className="order-2 lg:order-1">
-          <svg
-            viewBox="0 0 360 360"
-            className="mx-auto w-full max-w-md drop-shadow-[0_20px_60px_rgba(217,162,115,0.35)]"
-          >
-            <defs>
-              <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#2a1018" />
-                <stop offset="100%" stopColor="#5a2b22" />
-              </linearGradient>
-              <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#f4c9a8" />
-                <stop offset="100%" stopColor="#e3a07c" />
-              </linearGradient>
-            </defs>
-
-            {/* face */}
-            <ellipse cx="180" cy="150" rx="62" ry="74" fill="url(#skin)" />
-            <circle cx="160" cy="140" r="5" fill="#3a1f1a" />
-            <circle cx="200" cy="140" r="5" fill="#3a1f1a" />
-            <path
-              d="M165 170 Q180 182 195 170"
-              stroke="#b25f63"
-              strokeWidth="3"
-              fill="none"
-              strokeLinecap="round"
+          <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]">
+            {STYLES.map((s, i) => (
+              <div
+                key={s.src}
+                className="absolute inset-0 bg-cover bg-center transition-opacity duration-[900ms] ease-out"
+                style={{
+                  backgroundImage: `url(${s.src})`,
+                  opacity: i === active ? 1 : 0,
+                  animation: i === active ? "kenburns 7s ease-out forwards" : "none",
+                }}
+              />
+            ))}
+            <div
+              key={active}
+              className="pointer-events-none absolute inset-0 z-10"
+              style={{ animation: "sheen 1s ease-out forwards" }}
             />
-
-            {/* hair strands */}
-            {Array.from({ length: STRANDS }).map((_, i) => {
-              const x = 96 + i * ((168) / (STRANDS - 1));
-              return (
-                <g key={i}>
-                  <rect
-                    className="strand"
-                    x={x}
-                    y={70}
-                    width={168 / STRANDS - 1.5}
-                    height={210}
-                    rx={3}
-                    fill="url(#hairGrad)"
-                  />
-                  <rect
-                    className={`fall-${i}`}
-                    x={x}
-                    y={250}
-                    width={168 / STRANDS - 1.5}
-                    height={26}
-                    rx={3}
-                    fill="url(#hairGrad)"
-                  />
-                </g>
-              );
-            })}
-
-            {/* scissors */}
-            <g ref={scissors}>
-              <circle cx="0" cy="250" r="6" fill="none" stroke="#e9c98b" strokeWidth="3" />
-              <circle cx="0" cy="266" r="6" fill="none" stroke="#e9c98b" strokeWidth="3" />
-              <line x1="0" y1="250" x2="34" y2="258" stroke="#e9c98b" strokeWidth="3" strokeLinecap="round" />
-              <line x1="0" y1="266" x2="34" y2="258" stroke="#e9c98b" strokeWidth="3" strokeLinecap="round" />
-            </g>
-          </svg>
+          </div>
         </div>
 
-        <div className="order-1 lg:order-2">
+        <div className="order-1 flex flex-col items-center text-center lg:order-2 lg:items-start lg:text-left">
           <span className="text-xs uppercase tracking-[0.4em] text-rose/80">
             The Hair Studio
           </span>
           <h2 className="mt-3 font-display text-4xl font-light leading-tight sm:text-6xl">
-            Every <span className="text-gold-gradient">cut</span>, crafted live
+            Find your <span className="text-gold-gradient">signature</span> style
           </h2>
           <p className="mt-5 max-w-md text-cream/65">
-            Scroll to watch a precision cut take shape in real time — long
-            lengths shaped into a flawless, modern silhouette. The same care we
-            bring to your chair, from styling to spa-grade treatments.
+            Spin the wheel to preview salon hairstyles — cuts, curls, sleek
+            blowouts and colour. The same craft we bring to your chair, from
+            styling to spa-grade treatments.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+
+          <div className="mt-6">
+            <p className="font-display text-2xl leading-none text-gold-gradient">
+              {STYLES[active].label}
+            </p>
+            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-cream/50">
+              {STYLES[active].tag}
+            </p>
+          </div>
+
+          <div className="mt-7">
+            <MakeoverWheel
+              items={STYLES}
+              value={active}
+              onChange={pickStyle}
+              icon="✂"
+            />
+          </div>
+
+          <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
             {["Layer cut", "Bob & lob", "Keratin", "Hair spa"].map((t) => (
               <span
                 key={t}

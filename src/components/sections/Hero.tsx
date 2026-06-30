@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import HeroOrnament from "@/components/HeroOrnament";
 
 const fade = {
   hidden: { opacity: 0, y: 40 },
@@ -17,6 +18,9 @@ export default function Hero() {
       id="home"
       className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 text-center"
     >
+      {/* Elegant animated salon-themed centerpiece (no photos) */}
+      <HeroOrnament />
+
       <motion.p
         custom={0}
         variants={fade}
