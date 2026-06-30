@@ -18,16 +18,16 @@ export default function MakeoverWheel({
   onChange,
   icon,
   autoPlay = false,
-  active = true,
+  visibility = 1,
 }: {
   items: WheelItem[];
   value: number;
   onChange: (i: number) => void;
   icon?: ReactNode;
   autoPlay?: boolean;
-  /** Whether the owning section is in view. Drives mobile floating visibility
-   *  and gates the auto-spin so off-screen wheels stay silent. */
-  active?: boolean;
+  /** 0→1 mobile floating opacity, scroll-driven by the owning section.
+   *  Ignored on desktop where the wheel is always inline & fully visible. */
+  visibility?: number;
 }) {
   const n = items.length;
   const seg = 360 / n;
@@ -35,14 +35,24 @@ export default function MakeoverWheel({
   const discRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(-value * seg);
   const [dragging, setDragging] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 1024px)").matches
+  );
 
   const rotationRef = useRef(rotation);
   const lastAngleRef = useRef(0);
   const valueRef = useRef(value);
-  const activeRef = useRef(active);
   rotationRef.current = rotation;
   valueRef.current = value;
-  activeRef.current = active;
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => setIsDesktop(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const norm = (i: number) => ((i % n) + n) % n;
 
@@ -63,11 +73,11 @@ export default function MakeoverWheel({
     setRotation(target);
   }, [value, seg, dragging]);
 
-  // Auto-spin every 5 s — only while the section is in view.
+  // Optional auto-spin (disabled by default — the wheel is user-driven).
   useEffect(() => {
     if (!autoPlay || n < 2) return;
     const id = window.setInterval(() => {
-      if (dragging || document.hidden || !activeRef.current) return;
+      if (dragging || document.hidden) return;
       emit(norm(valueRef.current + 1), false);
     }, AUTO_MS);
     return () => window.clearInterval(id);
@@ -129,15 +139,21 @@ export default function MakeoverWheel({
     step(e.deltaY > 0 ? 1 : -1);
   };
 
+  const floatStyle = isDesktop
+    ? undefined
+    : {
+        opacity: visibility,
+        transform: `translateY(${(1 - visibility) * 22}px)`,
+        pointerEvents: (visibility > 0.05 ? "auto" : "none") as "auto" | "none",
+      };
+
   return (
     <div
+      style={floatStyle}
       className={[
         "z-40 flex select-none flex-col items-center gap-2",
         // --- mobile: floating glassy dial, bottom-right, above the sound btn ---
-        "fixed bottom-[88px] right-3 rounded-[28px] border border-gold/20 bg-white/[0.06] p-2.5 backdrop-blur-md transition-all duration-500",
-        active
-          ? "translate-y-0 opacity-90 pointer-events-auto"
-          : "pointer-events-none translate-y-6 opacity-0",
+        "fixed bottom-[88px] right-3 rounded-[28px] border border-gold/20 bg-white/[0.06] p-2.5 backdrop-blur-md transition-[opacity,transform] duration-300 ease-out",
         // --- desktop (lg+): inline in the column, no floating chrome ---
         "lg:pointer-events-auto lg:static lg:bottom-auto lg:right-auto lg:z-auto lg:translate-y-0 lg:gap-3 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:opacity-100 lg:backdrop-blur-none",
       ].join(" ")}

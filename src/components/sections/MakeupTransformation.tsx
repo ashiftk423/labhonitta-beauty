@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { sound } from "@/lib/sound";
 import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
+import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
 
 const LOOKS: (WheelItem & { src: string; tag: string })[] = [
   { src: "/images/bride-after.webp", label: "Signature Bridal", tag: "HD bridal glam", color: "#e9c98b" },
@@ -13,30 +14,17 @@ const LOOKS: (WheelItem & { src: string; tag: string })[] = [
 ];
 
 export default function MakeupTransformation() {
-  const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
-  const [inView, setInView] = useState(false);
+  const { ref: cardRef, visibility } = useFloatingVisibility<HTMLDivElement>();
 
   const pickLook = (i: number) => {
     setActive(i);
     sound.sparkle();
   };
 
-  useEffect(() => {
-    const el = root.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => setInView(e.isIntersecting),
-      { threshold: 0.35 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
     <section
       id="bridal"
-      ref={root}
       className="relative flex min-h-[100svh] items-center justify-center px-6 py-24"
     >
       <div className="grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
@@ -67,12 +55,15 @@ export default function MakeupTransformation() {
               value={active}
               onChange={pickLook}
               icon="💄"
-              active={inView}
+              visibility={visibility}
             />
           </div>
         </div>
 
-        <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]">
+        <div
+          ref={cardRef}
+          className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]"
+        >
           {LOOKS.map((l, i) => (
             <div
               key={l.src}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { sound } from "@/lib/sound";
 import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
+import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
 
 const STYLES: (WheelItem & { src: string; tag: string })[] = [
   { src: "/images/hair-long.webp", label: "Long Layers", tag: "Soft natural waves", color: "#3a2218" },
@@ -13,35 +14,25 @@ const STYLES: (WheelItem & { src: string; tag: string })[] = [
 ];
 
 export default function HairStudio() {
-  const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
-  const [inView, setInView] = useState(false);
+  const { ref: cardRef, visibility } = useFloatingVisibility<HTMLDivElement>();
 
   const pickStyle = (i: number) => {
     setActive(i);
     sound.snip();
   };
 
-  useEffect(() => {
-    const el = root.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => setInView(e.isIntersecting),
-      { threshold: 0.35 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
     <section
       id="hair"
-      ref={root}
       className="relative flex min-h-[100svh] items-center justify-center px-6 py-24"
     >
       <div className="grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
         <div className="order-2 lg:order-1">
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]">
+          <div
+            ref={cardRef}
+            className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]"
+          >
             {STYLES.map((s, i) => (
               <div
                 key={s.src}
@@ -89,7 +80,7 @@ export default function HairStudio() {
               value={active}
               onChange={pickStyle}
               icon="✂"
-              active={inView}
+              visibility={visibility}
             />
           </div>
 
