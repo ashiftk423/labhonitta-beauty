@@ -1,18 +1,65 @@
 @import "tailwindcss";
 
 /* ----------------------------------------------------------------
-   LABHONITTA — Luxury Beauty Parlour design system
-   Palette: deep plum night, rose-gold, champagne, warm cream
+   LABHONITTA — client cream / rose-gold system
+   Light (default): soft silk cream + yellow-gold text (high visibility)
+   Dark: deep plum night + bright champagne-yellow text
 ----------------------------------------------------------------- */
-:root {
+:root,
+html.light {
+  --bg: #f4ebe3;
+  --bg-soft: #ebe0d6;
+  --cream: #7a5c12;
+  --rose: #c98b7a;
+  --rose-gold: #c9956c;
+  --gold: #e8c547;
+  --plum: #e8d5c8;
+  --foreground: #6b4e0a;
+  --muted: rgba(107, 78, 10, 0.78);
+  --muted-soft: rgba(107, 78, 10, 0.55);
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(201, 149, 108, 0.35);
+  --drawer-bg: rgba(255, 248, 242, 0.88);
+  --nav-bg: rgba(255, 248, 242, 0.72);
+  --card-border: rgba(107, 78, 10, 0.1);
+  --ink: #3d2a08;
+  --surface: #fffaf5;
+  --orb-a: rgba(232, 197, 71, 0.22);
+  --orb-b: rgba(201, 149, 108, 0.18);
+  --orb-c: rgba(232, 213, 200, 0.9);
+  --page-grad-mid: #ebe0d6;
+  --headline-a: #fff1a0;
+  --headline-b: #e8c547;
+  --headline-c: #c9956c;
+  --headline-d: #f0d060;
+}
+
+html.dark {
   --bg: #0d0610;
   --bg-soft: #160b1c;
-  --cream: #f7ede4;
+  --cream: #f7e7a0;
   --rose: #e8a6b8;
   --rose-gold: #d9a273;
-  --gold: #e9c98b;
+  --gold: #f0d060;
   --plum: #3a1430;
-  --foreground: #f7ede4;
+  --foreground: #f7e7a0;
+  --muted: rgba(247, 231, 160, 0.72);
+  --muted-soft: rgba(247, 231, 160, 0.5);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(240, 208, 96, 0.22);
+  --drawer-bg: rgba(22, 11, 28, 0.92);
+  --nav-bg: rgba(22, 11, 28, 0.72);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --ink: #1a0a14;
+  --surface: #1c0f22;
+  --orb-a: rgba(240, 208, 96, 0.14);
+  --orb-b: rgba(232, 166, 184, 0.12);
+  --orb-c: rgba(58, 20, 48, 0.55);
+  --page-grad-mid: #160b1c;
+  --headline-a: #fff6c2;
+  --headline-b: #f0d060;
+  --headline-c: #e8a6b8;
+  --headline-d: #ffe566;
 }
 
 @theme inline {
@@ -23,6 +70,8 @@
   --color-rosegold: var(--rose-gold);
   --color-gold: var(--gold);
   --color-plum: var(--plum);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
 }
@@ -34,16 +83,21 @@
 html {
   margin: 0;
   padding: 0;
-  color-scheme: dark;
+  color-scheme: light;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
-  background-color: #0d0610;
+  background-color: var(--bg);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  transition: background-color 0.45s ease, color 0.45s ease;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
@@ -55,13 +109,14 @@ body {
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background-color: #0d0610;
+  background-color: var(--bg);
   background-image:
-    radial-gradient(60% 50% at 18% 12%, rgba(216, 162, 115, 0.14), transparent 60%),
-    radial-gradient(55% 45% at 85% 20%, rgba(232, 166, 184, 0.12), transparent 60%),
-    radial-gradient(70% 60% at 50% 100%, rgba(58, 20, 48, 0.55), transparent 70%),
-    linear-gradient(180deg, #0d0610 0%, #160b1c 50%, #0d0610 100%);
+    radial-gradient(60% 50% at 18% 12%, var(--orb-a), transparent 60%),
+    radial-gradient(55% 45% at 85% 20%, var(--orb-b), transparent 60%),
+    radial-gradient(70% 60% at 50% 100%, var(--orb-c), transparent 70%),
+    linear-gradient(180deg, var(--bg) 0%, var(--page-grad-mid) 50%, var(--bg) 100%);
   background-attachment: fixed;
+  transition: background-color 0.45s ease, color 0.45s ease;
 }
 
 /* Lenis smooth-scroll requirements */
@@ -78,7 +133,7 @@ html.lenis body {
 
 ::selection {
   background: var(--rose-gold);
-  color: #1a0a14;
+  color: var(--ink);
 }
 
 /* Custom scrollbar */
@@ -89,28 +144,57 @@ html.lenis body {
   background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--rose-gold), var(--plum));
+  background: linear-gradient(var(--gold), var(--rose-gold));
   border-radius: 999px;
 }
 
 .font-display {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.01em;
 }
 
-/* Gold gradient text */
+/* Yellow-gold gradient text — high visibility on cream & dark */
 .text-gold-gradient {
-  background: linear-gradient(120deg, #f6e3b8 0%, #d9a273 40%, #e8a6b8 75%, #f6e3b8 100%);
+  background: linear-gradient(
+    120deg,
+    var(--headline-a) 0%,
+    var(--headline-b) 35%,
+    var(--headline-c) 70%,
+    var(--headline-d) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   background-size: 200% auto;
+  filter: drop-shadow(0 1px 0 rgba(61, 42, 8, 0.12));
+}
+
+html.dark .text-gold-gradient {
+  filter: drop-shadow(0 0 18px rgba(240, 208, 96, 0.25));
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(233, 201, 139, 0.18);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+}
+
+/* Mobile nav drawer — heavier frost so hero copy doesn't bleed through */
+.glass-drawer {
+  background: var(--drawer-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(32px) saturate(1.35);
+  -webkit-backdrop-filter: blur(32px) saturate(1.35);
+  box-shadow: 0 18px 48px -12px rgba(0, 0, 0, 0.18);
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.text-muted-soft {
+  color: var(--muted-soft);
 }
 
 /* Reusable shimmer animation for accent lines */

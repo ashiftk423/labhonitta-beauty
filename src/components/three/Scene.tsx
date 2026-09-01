@@ -3,18 +3,17 @@
 import { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import type { RootState } from "@react-three/fiber";
+import { useTheme } from "@/lib/theme";
 import GoldenDust from "./GoldenDust";
 import FloatingOrbs from "./FloatingOrbs";
 
 /**
- * Fixed full-screen WebGL backdrop. The canvas is fully transparent so the
- * plum CSS gradient on <body> always shows through — never a white flash.
- *
- * We skip @react-three/postprocessing (crashes) and skip drei's Environment
- * (loads a heavy HDR skybox that can paint the canvas opaque / exhaust GPU
- * contexts). Lights + metallic orbs + particles are enough for the glow.
+ * Fixed full-screen WebGL backdrop. Transparent clear so body gradient shows.
+ * Orbs stay visible; page copy sits above via main z-10.
  */
 export default function Scene() {
+  const { theme } = useTheme();
+  const light = theme === "light";
   const [visible, setVisible] = useState(true);
   const [alive, setAlive] = useState(true);
 
@@ -25,9 +24,7 @@ export default function Scene() {
   }, []);
 
   const handleCreated = ({ gl }: RootState) => {
-    // Transparent clear — body gradient shows through, never white.
     gl.setClearColor(0x000000, 0);
-
     const canvas = gl.domElement;
     canvas.style.background = "transparent";
 
@@ -60,10 +57,27 @@ export default function Scene() {
         onCreated={handleCreated}
         style={{ background: "transparent" }}
       >
-        <ambientLight intensity={0.55} />
-        <directionalLight position={[5, 5, 5]} intensity={2} color="#ffe9c7" />
-        <pointLight position={[-5, -3, 2]} intensity={28} color="#e8a6b8" />
-        <pointLight position={[4, 2, 3]} intensity={18} color="#f6e3b8" />
+        <ambientLight intensity={light ? 1.35 : 0.7} />
+        <directionalLight
+          position={[5, 5, 5]}
+          intensity={light ? 3.2 : 2.2}
+          color="#fff8f0"
+        />
+        <directionalLight
+          position={[-4, 2, 4]}
+          intensity={light ? 1.4 : 0}
+          color="#ffe8f0"
+        />
+        <pointLight
+          position={[-5, -3, 2]}
+          intensity={light ? 48 : 28}
+          color={light ? "#f0d8e0" : "#e8a6b8"}
+        />
+        <pointLight
+          position={[4, 2, 3]}
+          intensity={light ? 44 : 22}
+          color={light ? "#fff0c8" : "#f6e3b8"}
+        />
 
         <FloatingOrbs />
         <GoldenDust count={900} />

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import Intro from "@/components/Intro";
+import Providers from "@/components/Providers";
 import SmoothScroll from "@/components/SmoothScroll";
 
 const display = Cormorant_Garamond({
@@ -39,17 +40,19 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#0d0610",
+  themeColor: "#f4ebe3",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body className="min-h-screen overflow-x-hidden bg-[#0d0610] text-cream">
-        <Intro />
-        <SmoothScroll>{children}</SmoothScroll>
+    <html lang="en" className={`${display.variable} ${body.variable} light`}>
+      <body className="min-h-screen overflow-x-hidden bg-bg text-cream">
+        <Providers>
+          <Intro />
+          <SmoothScroll>{children}</SmoothScroll>
+        </Providers>
       </body>
     </html>
   );

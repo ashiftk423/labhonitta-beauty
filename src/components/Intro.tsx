@@ -3,18 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { lockScroll, unlockScroll } from "@/lib/lenis";
+import { useTheme } from "@/lib/theme";
 
 const WORDMARK = "Labhonitta";
 
 /**
- * Premium branded intro: a full-screen plum curtain where the "Labhonitta"
- * word-mark draws in with a gold shimmer and a thin progress line fills,
- * then the curtain splits and lifts to reveal the page.
- *
- * Mounted above <SmoothScroll> in layout.tsx. Locks Lenis while visible and
- * skips the whole animation under prefers-reduced-motion.
+ * Premium branded intro curtain — colours follow the active theme.
+ * Light: warm cream silk. Dark: deep plum night.
  */
 export default function Intro() {
+  const { theme } = useTheme();
+  const light = theme === "light";
+
   const [done, setDone] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -40,8 +40,6 @@ export default function Intro() {
 
     lockScroll();
 
-    // Safety net: no matter what happens with GSAP, never leave the curtain up
-    // or scroll locked for more than this.
     const failSafe = window.setTimeout(() => {
       unlockScroll();
       setDone(true);
@@ -98,8 +96,9 @@ export default function Intro() {
 
   if (done) return null;
 
-  const panel =
-    "absolute inset-x-0 h-1/2 bg-[radial-gradient(120%_100%_at_50%_50%,#3a1430_0%,#1c0a18_60%,#0d0610_100%)]";
+  const panel = light
+    ? "absolute inset-x-0 h-1/2 bg-[radial-gradient(120%_100%_at_50%_50%,#fff8f2_0%,#f3e8de_55%,#ebe0d6_100%)]"
+    : "absolute inset-x-0 h-1/2 bg-[radial-gradient(120%_100%_at_50%_50%,#3a1430_0%,#1c0a18_60%,#0d0610_100%)]";
 
   return (
     <div
@@ -132,10 +131,16 @@ export default function Intro() {
 
         <span
           ref={lineRef}
-          className="block h-px w-[min(280px,60vw)] bg-gradient-to-r from-transparent via-rosegold to-transparent"
+          className={`block h-px w-[min(280px,60vw)] bg-gradient-to-r from-transparent to-transparent ${
+            light ? "via-gold" : "via-rosegold"
+          }`}
         />
 
-        <p className="text-[0.7rem] uppercase tracking-[0.4em] text-cream/60">
+        <p
+          className={`text-[0.7rem] uppercase tracking-[0.4em] ${
+            light ? "text-gold/70" : "text-cream/60"
+          }`}
+        >
           Ladies Beauty Parlour
         </p>
       </div>

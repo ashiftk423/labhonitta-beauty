@@ -3,16 +3,13 @@
 import { useState } from "react";
 import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
-
-const LOOKS: (WheelItem & { src: string; tag: string })[] = [
-  { src: "/images/bride-after.webp", label: "Signature Bridal", tag: "HD bridal glam", color: "#e9c98b" },
-  { src: "/images/look-1.webp", label: "Classic Red Bridal", tag: "Traditional · temple gold", color: "#c0392b" },
-  { src: "/images/look-2.webp", label: "Rose Romance", tag: "Soft dewy party glam", color: "#e8a6b8" },
-  { src: "/images/look-3.webp", label: "Golden Reception", tag: "Bronze & champagne", color: "#d9a273" },
-  { src: "/images/look-4.webp", label: "Bold Modern Diva", tag: "Editorial smokey", color: "#7a2e4a" },
-];
+import { getBridalLooks } from "@/content/media";
 
 export default function MakeupTransformation() {
+  const LOOKS = getBridalLooks() as (WheelItem & {
+    src: string;
+    tag?: string;
+  })[];
   const [active, setActive] = useState(0);
   const { ref: cardRef, visibility } = useFloatingVisibility<HTMLDivElement>();
 
@@ -30,20 +27,20 @@ export default function MakeupTransformation() {
           <span className="text-xs uppercase tracking-[0.4em] text-rose/80">
             The Bridal Lookbook
           </span>
-          <h2 className="mt-3 font-display text-4xl font-light leading-tight sm:text-6xl">
+          <h2 className="mt-3 font-display text-4xl font-light leading-tight text-cream sm:text-6xl">
             One muse, <span className="text-gold-gradient">infinite looks</span>
           </h2>
-          <p className="mt-5 max-w-md text-cream/65">
+          <p className="mt-5 max-w-md text-muted">
             Spin the makeover wheel to glide through our signature
             transformations — from classic red bridal to bold editorial glam.
           </p>
 
           <div className="mt-6">
             <p className="font-display text-2xl leading-none text-gold-gradient">
-              {LOOKS[active].label}
+              {LOOKS[active]?.label}
             </p>
-            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-cream/50">
-              {LOOKS[active].tag}
+            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-muted-soft">
+              {LOOKS[active]?.tag}
             </p>
           </div>
 
@@ -69,7 +66,8 @@ export default function MakeupTransformation() {
               style={{
                 backgroundImage: `url(${l.src})`,
                 opacity: i === active ? 1 : 0,
-                animation: i === active ? "kenburns 7s ease-out forwards" : "none",
+                animation:
+                  i === active ? "kenburns 7s ease-out forwards" : "none",
               }}
             />
           ))}

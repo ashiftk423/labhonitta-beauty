@@ -1,20 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { GALLERY_SLOTS } from "@/content/media";
+import GallerySlotCard from "@/components/GallerySlotCard";
 
 /**
- * Masonry-ish portfolio grid. Replace each gradient tile with real work by
- * dropping photos into /public/images/gallery and swapping the `bg` style.
+ * Fixed 6-slot masonry gallery. Each slot has its own size + image list
+ * (see src/content/media.ts and public/images/gallery/slot-*).
+ * Images auto-slide every 3s; swipe / press-drag for prev/next.
  */
-const ITEMS = [
-  { label: "Bridal Glam", span: "row-span-2", grad: "from-rose/40 to-plum" },
-  { label: "Reception Look", span: "", grad: "from-rosegold/40 to-plum" },
-  { label: "Layer Cut", span: "", grad: "from-gold/30 to-plum" },
-  { label: "Engagement", span: "row-span-2", grad: "from-rose/30 to-plum" },
-  { label: "Keratin Shine", span: "", grad: "from-rosegold/30 to-plum" },
-  { label: "Party Makeover", span: "", grad: "from-gold/40 to-plum" },
-];
-
 export default function Gallery() {
   return (
     <section id="gallery" className="mx-auto max-w-7xl px-6 py-28 md:py-36">
@@ -22,28 +16,22 @@ export default function Gallery() {
         <span className="text-xs uppercase tracking-[0.4em] text-rose/80">
           Real brides, real glow
         </span>
-        <h2 className="mt-3 font-display text-4xl font-light sm:text-6xl">
+        <h2 className="mt-3 font-display text-4xl font-light text-cream sm:text-6xl">
           The <span className="text-gold-gradient">Gallery</span>
         </h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mx-auto mt-4 max-w-md text-sm text-muted"
+        >
+          Swipe or hold a tile to browse — each frame is sized for its own slot.
+        </motion.p>
       </div>
 
       <div className="grid auto-rows-[180px] grid-cols-2 gap-4 md:grid-cols-3">
-        {ITEMS.map((it, i) => (
-          <motion.figure
-            key={it.label}
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.6, delay: i * 0.08 }}
-            whileHover={{ scale: 1.02 }}
-            className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${it.grad} ${it.span}`}
-          >
-            <div className="absolute inset-0 flex items-end p-5">
-              <figcaption className="translate-y-2 font-display text-xl text-cream opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                {it.label}
-              </figcaption>
-            </div>
-          </motion.figure>
+        {GALLERY_SLOTS.map((slot, i) => (
+          <GallerySlotCard key={slot.id} slot={slot} index={i} />
         ))}
       </div>
     </section>

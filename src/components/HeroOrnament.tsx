@@ -23,31 +23,31 @@ export default function HeroOrnament() {
   return (
     <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
       <div className="relative h-[min(78vw,560px)] w-[min(78vw,560px)]">
-        {/* soft glow core */}
-        <div className="absolute inset-[18%] rounded-full bg-[radial-gradient(closest-side,rgba(217,162,115,0.16),rgba(232,166,184,0.06),transparent)] blur-2xl" />
+        {/* soft glow core — champagne / yellow */}
+        <div className="absolute inset-[18%] rounded-full bg-[radial-gradient(closest-side,rgba(232,197,71,0.28),rgba(201,149,108,0.14),transparent)] blur-2xl" />
 
-        {/* rotating rings */}
+        {/* rotating rings — stronger so they read on cream */}
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 60, ease: "linear", repeat: Infinity }}
-          className="absolute inset-0 rounded-full border border-dashed border-gold/25"
+          className="absolute inset-0 rounded-full border border-dashed border-gold/45"
         />
         <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 45, ease: "linear", repeat: Infinity }}
-          className="absolute inset-[10%] rounded-full border border-rose/20"
+          className="absolute inset-[10%] rounded-full border border-rose/40"
         />
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 32, ease: "linear", repeat: Infinity }}
-          className="absolute inset-[22%] rounded-full border border-dashed border-rosegold/30"
+          className="absolute inset-[22%] rounded-full border border-dashed border-rosegold/50"
         />
 
         {/* breathing inner ring */}
         <motion.div
-          animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
+          animate={{ scale: [1, 1.05, 1], opacity: [0.55, 0.95, 0.55] }}
           transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-          className="absolute inset-[33%] rounded-full border border-gold/40"
+          className="absolute inset-[33%] rounded-full border border-gold/60"
         />
 
         {/* orbiting beauty tools */}
@@ -64,7 +64,7 @@ export default function HeroOrnament() {
             return (
               <motion.div
                 key={i}
-                className="absolute flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full glass"
+                className="absolute flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-gold/40 bg-gold/15 shadow-[0_0_20px_-4px_rgba(232,197,71,0.45)] backdrop-blur-sm"
                 style={{ left: `${x}%`, top: `${y}%` }}
                 animate={{ rotate: -360 }}
                 transition={{ duration: 38, ease: "linear", repeat: Infinity }}
@@ -80,8 +80,8 @@ export default function HeroOrnament() {
                 >
                   <defs>
                     <linearGradient id="og" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#f6e3b8" />
-                      <stop offset="100%" stopColor="#e8a6b8" />
+                      <stop offset="0%" stopColor="#e8c547" />
+                      <stop offset="100%" stopColor="#c9956c" />
                     </linearGradient>
                   </defs>
                   <path d={d} />

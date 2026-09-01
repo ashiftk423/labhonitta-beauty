@@ -3,16 +3,13 @@
 import { useState } from "react";
 import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
-
-const STYLES: (WheelItem & { src: string; tag: string })[] = [
-  { src: "/images/hair-long.webp", label: "Long Layers", tag: "Soft natural waves", color: "#3a2218" },
-  { src: "/images/hair-styled.webp", label: "Styled Lob", tag: "Sleek salon blowout", color: "#5a2b22" },
-  { src: "/images/hair-straight.webp", label: "Sleek Straight", tag: "Glossy & smooth", color: "#241016" },
-  { src: "/images/hair-curls.webp", label: "Bouncy Curls", tag: "Voluminous ringlets", color: "#2a1810" },
-  { src: "/images/hair-updo.webp", label: "Caramel Updo", tag: "Balayage colour", color: "#8a5a2b" },
-];
+import { getHairStyles } from "@/content/media";
 
 export default function HairStudio() {
+  const STYLES = getHairStyles() as (WheelItem & {
+    src: string;
+    tag?: string;
+  })[];
   const [active, setActive] = useState(0);
   const { ref: cardRef, visibility } = useFloatingVisibility<HTMLDivElement>();
 
@@ -38,7 +35,8 @@ export default function HairStudio() {
                 style={{
                   backgroundImage: `url(${s.src})`,
                   opacity: i === active ? 1 : 0,
-                  animation: i === active ? "kenburns 7s ease-out forwards" : "none",
+                  animation:
+                    i === active ? "kenburns 7s ease-out forwards" : "none",
                 }}
               />
             ))}
@@ -54,10 +52,11 @@ export default function HairStudio() {
           <span className="text-xs uppercase tracking-[0.4em] text-rose/80">
             The Hair Studio
           </span>
-          <h2 className="mt-3 font-display text-4xl font-light leading-tight sm:text-6xl">
-            Find your <span className="text-gold-gradient">signature</span> style
+          <h2 className="mt-3 font-display text-4xl font-light leading-tight text-cream sm:text-6xl">
+            Find your <span className="text-gold-gradient">signature</span>{" "}
+            style
           </h2>
-          <p className="mt-5 max-w-md text-cream/65">
+          <p className="mt-5 max-w-md text-muted">
             Spin the wheel to preview salon hairstyles — cuts, curls, sleek
             blowouts and colour. The same craft we bring to your chair, from
             styling to spa-grade treatments.
@@ -65,10 +64,10 @@ export default function HairStudio() {
 
           <div className="mt-6">
             <p className="font-display text-2xl leading-none text-gold-gradient">
-              {STYLES[active].label}
+              {STYLES[active]?.label}
             </p>
-            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-cream/50">
-              {STYLES[active].tag}
+            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-muted-soft">
+              {STYLES[active]?.tag}
             </p>
           </div>
 
@@ -80,17 +79,6 @@ export default function HairStudio() {
               icon="✂"
               visibility={visibility}
             />
-          </div>
-
-          <div className="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
-            {["Layer cut", "Bob & lob", "Keratin", "Hair spa"].map((t) => (
-              <span
-                key={t}
-                className="rounded-full border border-gold/30 px-4 py-1.5 text-sm text-cream/80"
-              >
-                {t}
-              </span>
-            ))}
           </div>
         </div>
       </div>

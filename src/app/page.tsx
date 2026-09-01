@@ -15,7 +15,7 @@ export default function Home() {
       <BackgroundCanvas />
       <Navbar />
       <SoundToggle />
-      <main className="relative z-10">
+      <main className="relative z-10 isolate">
         <Hero />
         <Services />
         <MakeupTransformation />
