@@ -37,8 +37,9 @@ export default function MakeoverWheel({
   const [rotation, setRotation] = useState(-value * seg);
   const [dragging, setDragging] = useState(false);
   const [mounted, setMounted] = useState(false);
-  // From tablet up (>=768px) the wheel sits inline below the text and is always
-  // visible. Below that it floats in the corner with scroll-driven opacity.
+  // From desktop up (>=1024px) the wheel sits inline beside the image card.
+  // Below that it floats over the image like on phones — avoids awkward stacking
+  // on tablet widths where the grid is still single-column.
   const [isInline, setIsInline] = useState(false);
   const [onScreen, setOnScreen] = useState(false);
   const [kbSpinning, setKbSpinning] = useState(false);
@@ -64,7 +65,7 @@ export default function MakeoverWheel({
 
   useEffect(() => {
     setMounted(true);
-    const mq = window.matchMedia("(min-width: 768px)");
+    const mq = window.matchMedia("(min-width: 1024px)");
     const sync = () => setIsInline(mq.matches);
     sync();
     mq.addEventListener("change", sync);
@@ -209,8 +210,7 @@ export default function MakeoverWheel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onScreen, value, n]);
 
-  // Floating opacity/slide only applies on phones (< md). On tablet/desktop the
-  // wheel is inline and always fully visible, so no inline style overrides it.
+  // Floating opacity/slide only applies below lg. On desktop the wheel is inline.
   const floatStyle =
     mounted && !isInline
       ? {
@@ -228,17 +228,17 @@ export default function MakeoverWheel({
       style={floatStyle}
       className={[
         "z-40 flex select-none flex-col items-center gap-2",
-        // --- phones (< md): floating glassy dial, bottom-right, above sound btn ---
+        // --- mobile & tablet (< lg): floating glassy dial, bottom-right ---
         "fixed bottom-[88px] right-3 rounded-[28px] border border-gold/20 bg-white/[0.06] p-2.5 backdrop-blur-md transition-[opacity,transform] duration-300 ease-out",
-        // --- tablet & desktop (md+): inline in the column, no floating chrome ---
-        "md:pointer-events-auto md:static md:bottom-auto md:right-auto md:z-auto md:translate-y-0 md:gap-3 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:backdrop-blur-none",
+        // --- desktop (lg+): inline in the column beside the image card ---
+        "lg:pointer-events-auto lg:static lg:bottom-auto lg:right-auto lg:z-auto lg:translate-y-0 lg:gap-3 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:opacity-100 lg:backdrop-blur-none",
       ].join(" ")}
     >
       <div className="relative h-[112px] w-[112px] sm:h-[132px] sm:w-[132px] lg:h-[200px] lg:w-[200px]">
         <div className="absolute left-1/2 top-[-2px] z-30 h-0 w-0 -translate-x-1/2 border-l-[9px] border-r-[9px] border-t-[14px] border-l-transparent border-r-transparent border-t-gold drop-shadow-[0_0_6px_rgba(233,201,139,0.9)]" />
 
-        <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,#e9c98b,#d9a273,#e8a6b8,#3a1430,#e9c98b)] p-[2px] shadow-[0_0_40px_-10px_rgba(217,162,115,0.8)]">
-          <div className="h-full w-full rounded-full bg-[#160b1c]" />
+        <div className="absolute inset-0 rounded-full bg-[image:var(--wheel-conic)] p-[2px] shadow-[0_0_40px_-10px_rgba(217,162,115,0.8)]">
+          <div className="h-full w-full rounded-full bg-[color:var(--wheel-face)]" />
         </div>
 
         <div
@@ -292,7 +292,7 @@ export default function MakeoverWheel({
           })}
         </div>
 
-        <div className="pointer-events-none absolute inset-[34%] z-20 flex items-center justify-center rounded-full bg-gradient-to-br from-[#241225] to-[#0d0610] text-gold shadow-[inset_0_0_12px_rgba(0,0,0,0.6)]">
+        <div className="pointer-events-none absolute inset-[34%] z-20 flex items-center justify-center rounded-full bg-gradient-to-br from-[color:var(--wheel-hub-from)] to-[color:var(--wheel-hub-to)] text-gold shadow-[inset_0_0_12px_rgba(0,0,0,0.6)]">
           <span className="text-lg">{icon ?? "✦"}</span>
         </div>
       </div>
@@ -304,7 +304,7 @@ export default function MakeoverWheel({
       {/* Keyboard shortcut hint — always on tablet/desktop, pulses while spinning */}
       <div
         className={[
-          "hidden flex-col items-center gap-1.5 text-center transition-all duration-300 md:flex",
+          "hidden flex-col items-center gap-1.5 text-center transition-all duration-300 lg:flex",
           kbSpinning ? "scale-105 opacity-100" : "opacity-70",
         ].join(" ")}
         aria-live="polite"

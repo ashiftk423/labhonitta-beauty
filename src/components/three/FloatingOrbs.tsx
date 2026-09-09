@@ -12,7 +12,8 @@ export default function FloatingOrbs() {
 
   if (theme === "light") return null;
 
-  const colors = { a: "#d9a273", b: "#e8a6b8", c: "#f0d060" };
+  // Dark theme: bronze · rose-maroon · champagne (from the reference design)
+  const colors = { a: "#b08d6a", b: "#c4707f", c: "#dfc9ae" };
 
   return (
     <group>

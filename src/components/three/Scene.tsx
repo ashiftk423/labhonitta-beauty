@@ -61,22 +61,22 @@ export default function Scene() {
         <directionalLight
           position={[5, 5, 5]}
           intensity={light ? 3.2 : 2.2}
-          color="#fff8f0"
+          color="#fff6ec"
         />
         <directionalLight
           position={[-4, 2, 4]}
           intensity={light ? 1.4 : 0}
-          color="#ffe8f0"
+          color="#f7e2e0"
         />
         <pointLight
           position={[-5, -3, 2]}
-          intensity={light ? 48 : 28}
-          color={light ? "#f0d8e0" : "#e8a6b8"}
+          intensity={light ? 48 : 30}
+          color={light ? "#e8c3c8" : "#c4707f"}
         />
         <pointLight
           position={[4, 2, 3]}
-          intensity={light ? 44 : 22}
-          color={light ? "#fff0c8" : "#f6e3b8"}
+          intensity={light ? 44 : 24}
+          color={light ? "#f0d3b4" : "#dfc9ae"}
         />
 
         <FloatingOrbs />

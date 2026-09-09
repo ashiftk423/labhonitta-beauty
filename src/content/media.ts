@@ -119,6 +119,30 @@ export const HAIR_CUSTOM: MediaItem[] = [
   // { src: "/images/hair/01.webp", label: "Client Cut", tag: "Real work", color: "#3a2218" },
 ];
 
+/**
+ * Landing-page work showcase (the marquee under the hero).
+ * Drop real photos into public/images/work/ and list them in WORK_CUSTOM.
+ * Portrait 3:4 crops look best — about 700 × 930 px.
+ */
+export const WORK_FALLBACKS: MediaItem[] = [
+  { src: "/images/bride-after.webp", label: "Signature Bridal", tag: "Bridal Makeup" },
+  { src: "/images/look-1.webp", label: "Classic Red Bridal", tag: "Bridal Makeup" },
+  { src: "/images/hair-updo.webp", label: "Caramel Updo", tag: "Hair Styling" },
+  { src: "/images/look-2.webp", label: "Rose Romance", tag: "Party Makeup" },
+  { src: "/images/hair-curls.webp", label: "Bouncy Curls", tag: "Hair Styling" },
+  { src: "/images/look-3.webp", label: "Golden Reception", tag: "Reception Look" },
+  { src: "/images/hair-straight.webp", label: "Sleek Straight", tag: "Hair Treatment" },
+  { src: "/images/look-4.webp", label: "Bold Modern Diva", tag: "Artist Makeup" },
+];
+
+export const WORK_CUSTOM: MediaItem[] = [
+  // { src: "/images/work/01.webp", label: "Anjali's Wedding", tag: "Bridal Makeup" },
+];
+
+export function getWorkShowcase(): MediaItem[] {
+  return WORK_CUSTOM.length > 0 ? WORK_CUSTOM : WORK_FALLBACKS;
+}
+
 export function getBridalLooks(): MediaItem[] {
   return BRIDAL_CUSTOM.length > 0 ? BRIDAL_CUSTOM : BRIDAL_FALLBACKS;
 }

@@ -97,8 +97,8 @@ export default function Intro() {
   if (done) return null;
 
   const panel = light
-    ? "absolute inset-x-0 h-1/2 bg-[radial-gradient(120%_100%_at_50%_50%,#fff8f2_0%,#f3e8de_55%,#ebe0d6_100%)]"
-    : "absolute inset-x-0 h-1/2 bg-[radial-gradient(120%_100%_at_50%_50%,#3a1430_0%,#1c0a18_60%,#0d0610_100%)]";
+    ? "absolute inset-x-0 h-1/2 bg-[radial-gradient(120%_100%_at_50%_50%,#fffaf6_0%,#f7e9e2_55%,#edd9d7_100%)]"
+    : "absolute inset-x-0 h-1/2 bg-[radial-gradient(120%_100%_at_50%_50%,#2a211d_0%,#1a1817_60%,#131211_100%)]";
 
   return (
     <div

@@ -2,6 +2,9 @@ import BackgroundCanvas from "@/components/BackgroundCanvas";
 import Navbar from "@/components/Navbar";
 import SoundToggle from "@/components/SoundToggle";
 import Hero from "@/components/sections/Hero";
+import ServiceStrip from "@/components/sections/ServiceStrip";
+import About from "@/components/sections/About";
+import WorkShowcase from "@/components/sections/WorkShowcase";
 import Services from "@/components/sections/Services";
 import MakeupTransformation from "@/components/sections/MakeupTransformation";
 import HairStudio from "@/components/sections/HairStudio";
@@ -17,6 +20,9 @@ export default function Home() {
       <SoundToggle />
       <main className="relative z-10 isolate">
         <Hero />
+        <ServiceStrip />
+        <About />
+        <WorkShowcase />
         <Services />
         <MakeupTransformation />
         <HairStudio />

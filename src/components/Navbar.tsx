@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useTheme } from "@/lib/theme";
 
 const LINKS = [
   { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
   { label: "Services", href: "#services" },
   { label: "Bridal", href: "#bridal" },
   { label: "Hair Studio", href: "#hair" },
@@ -23,7 +24,7 @@ function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       title={isDark ? "Light mode" : "Dark mode"}
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/25 text-cream transition hover:border-gold/50 hover:bg-white/5"
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/25 text-cream transition hover:border-gold/50 hover:bg-white/5"
     >
       {isDark ? (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -49,8 +50,36 @@ function ThemeToggle() {
   );
 }
 
+/** Highlights whichever section is currently filling the viewport. */
+function useActiveSection() {
+  const [active, setActive] = useState("#home");
+
+  useEffect(() => {
+    const sections = LINKS.map((l) =>
+      document.querySelector<HTMLElement>(l.href)
+    ).filter((el): el is HTMLElement => Boolean(el));
+
+    if (sections.length === 0) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) setActive(`#${visible.target.id}`);
+      },
+      { threshold: [0.25, 0.5, 0.75], rootMargin: "-20% 0px -35% 0px" }
+    );
+
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, []);
+
+  return active;
+}
+
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const active = useActiveSection();
 
   return (
     <motion.header
@@ -74,7 +103,10 @@ export default function Navbar() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="text-sm text-cream/80 transition-colors hover:text-gold"
+                aria-current={active === l.href ? "page" : undefined}
+                className={`text-sm transition-colors hover:text-gold ${
+                  active === l.href ? "text-gold" : "text-cream/80"
+                }`}
               >
                 {l.label}
               </a>
@@ -82,67 +114,37 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="flex items-center gap-2 md:gap-3">
           <ThemeToggle />
           <a
             href="#contact"
-            className="rounded-full bg-gradient-to-r from-rosegold to-rose px-5 py-2 text-sm font-medium text-ink transition-transform hover:scale-105"
+            className="rounded-full bg-gradient-to-r from-rosegold to-rose px-4 py-2 text-xs font-medium text-ink transition-transform hover:scale-105 md:px-5 md:text-sm"
           >
             Book Now
           </a>
         </div>
-
-        <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
-          <button
-            aria-label="Toggle menu"
-            onClick={() => setOpen((v) => !v)}
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5"
-          >
-            <span
-              className={`h-0.5 w-6 bg-cream transition ${open ? "translate-y-2 rotate-45" : ""}`}
-            />
-            <span
-              className={`h-0.5 w-6 bg-cream transition ${open ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`h-0.5 w-6 bg-cream transition ${open ? "-translate-y-2 -rotate-45" : ""}`}
-            />
-          </button>
-        </div>
       </nav>
 
-      <AnimatePresence>
-        {open && (
-          <motion.ul
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mx-3 mt-2 overflow-hidden rounded-3xl px-6 py-4 glass-drawer md:hidden"
-          >
-            {LINKS.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="block border-b border-white/5 py-3 text-cream/85 hover:text-gold"
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
-            <li>
+      {/* Phones & small tablets: every link stays visible in a swipeable pill rail */}
+      <div className="mx-3 mt-2 md:hidden">
+        <ul className="no-scrollbar flex snap-x snap-mandatory items-center gap-2 overflow-x-auto rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-2 py-2 [backdrop-filter:blur(10px)]">
+          {LINKS.map((l) => (
+            <li key={l.href} className="snap-start">
               <a
-                href="#contact"
-                onClick={() => setOpen(false)}
-                className="mt-3 block rounded-full bg-gradient-to-r from-rosegold to-rose py-3 text-center font-medium text-ink"
+                href={l.href}
+                aria-current={active === l.href ? "page" : undefined}
+                className={`block whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                  active === l.href
+                    ? "bg-gradient-to-r from-rosegold to-rose text-ink"
+                    : "border border-gold/20 text-cream/80"
+                }`}
               >
-                Book Now
+                {l.label}
               </a>
             </li>
-          </motion.ul>
-        )}
-      </AnimatePresence>
+          ))}
+        </ul>
+      </div>
     </motion.header>
   );
 }
