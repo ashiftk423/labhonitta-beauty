@@ -1,19 +1,33 @@
 /**
  * Media content config — MVP source of truth for captions + image paths.
- * Drop real photos into the matching public/ folders, then list them here.
+ * Real photos come from works.generated.ts (see scripts/works.config.mjs);
+ * the AI images below are only used if that list is empty.
  * Later CRM will edit this (or a server DB) instead of hand-editing.
  *
  * Folder map:
  *   public/images/bridal/   → bridal wheel (infinite-friendly list)
  *   public/images/hair/     → hair studio wheel
+ *   public/images/work/     → recent work strip
+ *   public/images/signature/ → celebrity section
  *   public/images/gallery/slot-1 … slot-6  → fixed 6 gallery containers
  */
+
+import {
+  BRIDAL_PHOTOS,
+  GALLERY_PHOTOS,
+  HAIR_PHOTOS,
+  SIGNATURE_PHOTOS,
+  WORK_PHOTOS,
+  type SlotPhoto,
+} from "./works.generated";
 
 export type MediaItem = {
   src: string;
   label: string;
   tag?: string;
   color?: string;
+  /** CSS object-position — keeps the face in frame when cropped. */
+  focus?: string;
 };
 
 export type GallerySlot = {
@@ -37,7 +51,7 @@ export type GallerySlot = {
   /** Folder under /public/images/gallery/ */
   folder: string;
   /** Images for this slot only (auto-rotate every 3s) */
-  images: string[];
+  images: SlotPhoto[];
 };
 
 /** AI placeholders — always available if custom files are missing / empty */
@@ -107,23 +121,11 @@ export const HAIR_FALLBACKS: MediaItem[] = [
   },
 ];
 
-/**
- * Custom bridal looks — add paths after dropping files into
- * public/images/bridal/ (e.g. 01.webp). Leave empty to use AI fallbacks.
- */
-export const BRIDAL_CUSTOM: MediaItem[] = [
-  // { src: "/images/bridal/01.webp", label: "Client Bridal", tag: "Real work", color: "#e9c98b" },
-];
+export const BRIDAL_CUSTOM: MediaItem[] = BRIDAL_PHOTOS;
 
-export const HAIR_CUSTOM: MediaItem[] = [
-  // { src: "/images/hair/01.webp", label: "Client Cut", tag: "Real work", color: "#3a2218" },
-];
+export const HAIR_CUSTOM: MediaItem[] = HAIR_PHOTOS;
 
-/**
- * Landing-page work showcase (the marquee under the hero).
- * Drop real photos into public/images/work/ and list them in WORK_CUSTOM.
- * Portrait 3:4 crops look best — about 700 × 930 px.
- */
+/** Landing-page work strip. Portrait 3:4 crops look best. */
 export const WORK_FALLBACKS: MediaItem[] = [
   { src: "/images/bride-after.webp", label: "Signature Bridal", tag: "Bridal Makeup" },
   { src: "/images/look-1.webp", label: "Classic Red Bridal", tag: "Bridal Makeup" },
@@ -135,9 +137,12 @@ export const WORK_FALLBACKS: MediaItem[] = [
   { src: "/images/look-4.webp", label: "Bold Modern Diva", tag: "Artist Makeup" },
 ];
 
-export const WORK_CUSTOM: MediaItem[] = [
-  // { src: "/images/work/01.webp", label: "Anjali's Wedding", tag: "Bridal Makeup" },
-];
+export const WORK_CUSTOM: MediaItem[] = WORK_PHOTOS;
+
+/** Celebrity / signature clients (Manju Warrier etc.). */
+export function getSignatureWork(): MediaItem[] {
+  return SIGNATURE_PHOTOS;
+}
 
 export function getWorkShowcase(): MediaItem[] {
   return WORK_CUSTOM.length > 0 ? WORK_CUSTOM : WORK_FALLBACKS;
@@ -168,7 +173,7 @@ export const GALLERY_SLOTS: GallerySlot[] = [
       note: "Left column — tall cell (~2 rows). Prefer portrait bridal close-ups.",
     },
     folder: "gallery/slot-1",
-    images: [],
+    images: GALLERY_PHOTOS["slot-1"] ?? [],
   },
   {
     id: "slot-2",
@@ -182,11 +187,11 @@ export const GALLERY_SLOTS: GallerySlot[] = [
       note: "Middle column — short cell (1 row). Landscape or cropped mid-shots.",
     },
     folder: "gallery/slot-2",
-    images: [],
+    images: GALLERY_PHOTOS["slot-2"] ?? [],
   },
   {
     id: "slot-3",
-    caption: "Layer Cut",
+    caption: "Hair Styling",
     span: "",
     fallbackGrad: "from-gold/30 to-plum",
     sizeHint: {
@@ -196,7 +201,7 @@ export const GALLERY_SLOTS: GallerySlot[] = [
       note: "Right column — short cell. Hair detail / side profile works well.",
     },
     folder: "gallery/slot-3",
-    images: [],
+    images: GALLERY_PHOTOS["slot-3"] ?? [],
   },
   {
     id: "slot-4",
@@ -210,11 +215,11 @@ export const GALLERY_SLOTS: GallerySlot[] = [
       note: "Middle column — tall cell. Full engagement / mehndi portraits.",
     },
     folder: "gallery/slot-4",
-    images: [],
+    images: GALLERY_PHOTOS["slot-4"] ?? [],
   },
   {
     id: "slot-5",
-    caption: "Keratin Shine",
+    caption: "Curls & Shine",
     span: "",
     fallbackGrad: "from-rosegold/30 to-plum",
     sizeHint: {
@@ -224,7 +229,7 @@ export const GALLERY_SLOTS: GallerySlot[] = [
       note: "Right column — short cell. Hair shine / before-after crop.",
     },
     folder: "gallery/slot-5",
-    images: [],
+    images: GALLERY_PHOTOS["slot-5"] ?? [],
   },
   {
     id: "slot-6",
@@ -238,6 +243,6 @@ export const GALLERY_SLOTS: GallerySlot[] = [
       note: "Bottom-left short cell on mobile stack; landscape party glam.",
     },
     folder: "gallery/slot-6",
-    images: [],
+    images: GALLERY_PHOTOS["slot-6"] ?? [],
   },
 ];

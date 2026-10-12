@@ -3,6 +3,8 @@
  * Edit here — the hero, service strip and about section all read from this.
  */
 
+import { ABOUT_PHOTO, HERO_PHOTO } from "./works.generated";
+
 export const BUSINESS = {
   name: "Labhonitta Beauty Parlour",
   tagline: "Makeup Studio & Academy",
@@ -72,18 +74,15 @@ export const SERVICE_STRIP = [
   },
 ];
 
-/**
- * Landing-page photos. Drop real files in these folders and the site picks
- * them up; the AI placeholders are used until then.
- */
+/** Landing-page photos. The AI placeholders only show if a file fails to load. */
 export const HERO_IMAGE = {
-  src: "/images/hero/bride.webp",
+  ...HERO_PHOTO,
   fallback: "/images/bride-after.webp",
-  alt: "Bride wearing signature Labhonitta bridal makeup",
+  alt: "Bride in a red Kanjeevaram saree and temple gold jewellery, makeup by Labhonitta",
 };
 
 export const ABOUT_IMAGE = {
-  src: "/images/about/founder.webp",
+  ...ABOUT_PHOTO,
   fallback: "/images/look-4.webp",
-  alt: `${BUSINESS.founder}, ${BUSINESS.founderRole} at ${BUSINESS.name}`,
+  alt: `${BUSINESS.founder} applying bridal makeup at ${BUSINESS.name}`,
 };

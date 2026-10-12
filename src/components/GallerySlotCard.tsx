@@ -24,9 +24,10 @@ export default function GallerySlotCard({ slot, index }: Props) {
   const startX = useRef<number | null>(null);
   const dragging = useRef(false);
 
-  const usable = images.filter((src) => !failed[src]);
+  const usable = images.filter((img) => !failed[img.src]);
   const count = usable.length;
   const showImage = count > 0;
+  const current = count > 0 ? active % count : 0;
 
   const go = useCallback(
     (dir: 1 | -1) => {
@@ -46,10 +47,6 @@ export default function GallerySlotCard({ slot, index }: Props) {
     const id = window.setInterval(() => go(1), SLIDE_MS);
     return () => window.clearInterval(id);
   }, [showImage, count, paused, go]);
-
-  useEffect(() => {
-    setActive(0);
-  }, [slot.id, images.join("|")]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     startX.current = e.clientX;
@@ -92,21 +89,32 @@ export default function GallerySlotCard({ slot, index }: Props) {
       className={`group relative touch-pan-y overflow-hidden rounded-3xl border border-[color:var(--card-border)] bg-gradient-to-br ${slot.fallbackGrad} ${slot.span} select-none`}
       aria-label={`${slot.caption} gallery slot`}
     >
+      {/* Only the visible photo and its neighbours are mounted (so the
+          cross-fade works both ways), keeping big slots from downloading
+          every photo up front. */}
       {showImage &&
-        usable.map((src, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={src}
-            src={src}
-            alt=""
-            loading={i === 0 ? "eager" : "lazy"}
-            decoding="async"
-            draggable={false}
-            onError={() => setFailed((f) => ({ ...f, [src]: true }))}
-            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
-            style={{ opacity: i === active % count ? 1 : 0 }}
-          />
-        ))}
+        usable.map((img, i) => {
+          const isCurrent = i === current;
+          const near =
+            isCurrent ||
+            i === (current + 1) % count ||
+            i === (current - 1 + count) % count;
+          if (!near) return null;
+          return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={img.src}
+              src={img.src}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+              onError={() => setFailed((f) => ({ ...f, [img.src]: true }))}
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+              style={{ opacity: isCurrent ? 1 : 0, objectPosition: img.focus }}
+            />
+          );
+        })}
 
       {!showImage && hasImages && (
         <div className="absolute inset-0 bg-gradient-to-br opacity-80" />
@@ -120,19 +128,22 @@ export default function GallerySlotCard({ slot, index }: Props) {
         </figcaption>
       </div>
 
-      {count > 1 && (
+      {count > 1 && count <= 8 && (
         <div className="absolute bottom-4 right-4 flex gap-1.5">
           {usable.map((_, i) => (
             <span
               key={i}
               className={`h-1.5 rounded-full transition-all ${
-                i === active % count
-                  ? "w-4 bg-rosegold"
-                  : "w-1.5 bg-cream/35"
+                i === current ? "w-4 bg-rosegold" : "w-1.5 bg-cream/35"
               }`}
             />
           ))}
         </div>
+      )}
+      {count > 8 && (
+        <span className="absolute bottom-4 right-4 rounded-full bg-black/45 px-2.5 py-1 text-[10px] tabular-nums tracking-[0.15em] text-white/85 [backdrop-filter:blur(6px)]">
+          {current + 1} / {count}
+        </span>
       )}
     </motion.figure>
   );

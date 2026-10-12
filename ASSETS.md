@@ -1,29 +1,46 @@
 # Labhonitta media & CRM notes (MVP)
 
 ## What is live now
-- Dark (default) + light theme toggle in the navbar
-- Gallery: 6 fixed slots, each with its own folder & size
+- Light (default) + dark theme toggle in the navbar
+- Gallery: 6 fixed slots, each with its own photos
 - Auto-slide every 3s; swipe / press-drag for prev / next
-- Bridal & Hair wheels: custom folders or AI fallbacks
+- Bridal & Hair wheels, Recent Work strip, celebrity section: real client photos
+  (AI images in `public/images/*.webp` are only a fallback)
 - CRM stub: `Shift+A` then `Enter` → `/crm` (hardcoded superadmin login)
 
 ## Superadmin (hardcoded MVP)
 - Email: `ashifzaheer423@gmail.com`
 - Password: `labhonitta@ashif`
 
-## Where to put images
-| Area | Folder | Size |
-|------|--------|------|
-| Bridal wheel | `public/images/bridal/` | 3:4 · ~900×1200+ |
-| Hair wheel | `public/images/hair/` | 3:4 · ~900×1200+ |
-| Gallery slot-1 | `public/images/gallery/slot-1/` | **800×1200** tall |
-| Gallery slot-2 | `public/images/gallery/slot-2/` | **1200×800** wide |
-| Gallery slot-3 | `public/images/gallery/slot-3/` | **1200×800** wide |
-| Gallery slot-4 | `public/images/gallery/slot-4/` | **800×1200** tall |
-| Gallery slot-5 | `public/images/gallery/slot-5/` | **1200×800** wide |
-| Gallery slot-6 | `public/images/gallery/slot-6/` | **1200×800** wide |
+## Adding / changing photos
+Originals stay outside the repo (e.g. `Downloads\labhonitta\works`).
 
-After dropping files, register paths in `src/content/media.ts`.
+1. Add the photo to the right subfolder of the works folder.
+2. List it in `scripts/works.config.mjs` (order = display order, with caption
+   and tag). Gallery slots marked `"*"` pick up every file automatically.
+3. Run `node scripts/optimize-works.mjs "C:\Users\Ashif saheer\Downloads\labhonitta\works"`
+
+The script resizes to max 960×1440 WebP (~50–200 KB each), writes them to
+`public/images/{hero,about,bridal,hair,work,signature,gallery/slot-N}/` and
+regenerates `src/content/works.generated.ts`. Don't edit that file by hand.
+
+If a face gets cropped off in a short gallery cell, add a `focus` override
+(CSS object-position, e.g. `"50% 8%"`) for that file in the config.
+
+| Area | Source folder | Notes |
+|------|---------------|-------|
+| Hero | one photo from `brides` | 3:4, face in top half |
+| About arch | `about` | top is rounded — leave head-room |
+| Bridal wheel | `brides` | any count, wheel dots shrink to fit |
+| Hair wheel | `hair studio` | |
+| Recent Work strip | `recent works` | 3:4 cards |
+| Trusted by the Stars | `signature` | |
+| Gallery slot-1 Bridal Glam | `gallery/bridal glam` | tall cell |
+| Gallery slot-2 Reception Look | `gallery/reception look` | wide cell |
+| Gallery slot-3 Hair Styling | picked from `hair studio` | wide cell |
+| Gallery slot-4 Engagement | `gallery/engagemet` | tall cell |
+| Gallery slot-5 Curls & Shine | picked from `hair studio` | wide cell |
+| Gallery slot-6 Party Makeover | `gallery/party makeover` | wide cell |
 
 ## Later (not built yet)
 - Docker + PostgreSQL + .NET C# API (same pattern as Kattar)

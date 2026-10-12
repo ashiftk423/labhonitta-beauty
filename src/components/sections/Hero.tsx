@@ -152,6 +152,8 @@ export default function Hero() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={src}
+              srcSet={src === HERO_IMAGE.src ? HERO_IMAGE.srcSet : undefined}
+              sizes="(min-width: 1024px) 560px, 420px"
               alt={HERO_IMAGE.alt}
               fetchPriority="high"
               decoding="async"

@@ -220,24 +220,6 @@ html.dark .text-gold-gradient {
   display: none;
 }
 
-/* Continuous work-showcase marquee */
-@keyframes work-marquee {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-.animate-work-marquee {
-  animation: work-marquee 42s linear infinite;
-  will-change: transform;
-}
-.work-marquee-track:hover .animate-work-marquee,
-.work-marquee-track:focus-within .animate-work-marquee {
-  animation-play-state: paused;
-}
-
 .text-muted {
   color: var(--muted);
 }

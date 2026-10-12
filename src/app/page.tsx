@@ -4,6 +4,7 @@ import SoundToggle from "@/components/SoundToggle";
 import Hero from "@/components/sections/Hero";
 import ServiceStrip from "@/components/sections/ServiceStrip";
 import About from "@/components/sections/About";
+import SignatureClients from "@/components/sections/SignatureClients";
 import WorkShowcase from "@/components/sections/WorkShowcase";
 import Services from "@/components/sections/Services";
 import MakeupTransformation from "@/components/sections/MakeupTransformation";
@@ -22,6 +23,7 @@ export default function Home() {
         <Hero />
         <ServiceStrip />
         <About />
+        <SignatureClients />
         <WorkShowcase />
         <Services />
         <MakeupTransformation />

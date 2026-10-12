@@ -70,7 +70,7 @@ export default function About() {
               loading="lazy"
               decoding="async"
               onError={() => setSrc(ABOUT_IMAGE.fallback)}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover object-[50%_30%]"
             />
           </div>
         </motion.div>

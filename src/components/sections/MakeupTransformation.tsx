@@ -4,11 +4,13 @@ import { useState } from "react";
 import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
 import { getBridalLooks } from "@/content/media";
+import { isNear } from "@/lib/isNear";
 
 export default function MakeupTransformation() {
   const LOOKS = getBridalLooks() as (WheelItem & {
     src: string;
     tag?: string;
+    focus?: string;
   })[];
   const [active, setActive] = useState(0);
   const { ref: cardRef, visibility } = useFloatingVisibility<HTMLDivElement>();
@@ -59,18 +61,22 @@ export default function MakeupTransformation() {
           ref={cardRef}
           className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]"
         >
-          {LOOKS.map((l, i) => (
-            <div
-              key={l.src}
-              className="absolute inset-0 bg-cover bg-center transition-opacity duration-[900ms] ease-out"
-              style={{
-                backgroundImage: `url(${l.src})`,
-                opacity: i === active ? 1 : 0,
-                animation:
-                  i === active ? "kenburns 7s ease-out forwards" : "none",
-              }}
-            />
-          ))}
+          {LOOKS.map((l, i) =>
+            isNear(i, active, LOOKS.length) ? (
+              <div
+                key={l.src}
+                className="absolute inset-0 bg-cover transition-opacity duration-[900ms] ease-out"
+                style={{
+                  backgroundImage: `url(${l.src})`,
+                  backgroundPosition: l.focus ?? "center",
+                  backgroundColor: l.color,
+                  opacity: i === active ? 1 : 0,
+                  animation:
+                    i === active ? "kenburns 7s ease-out forwards" : "none",
+                }}
+              />
+            ) : null
+          )}
           <div
             key={active}
             className="pointer-events-none absolute inset-0 z-10"
