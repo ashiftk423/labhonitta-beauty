@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/lib/theme";
 
 const LINKS = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
+  { label: "Work", href: "#work" },
   { label: "Services", href: "#services" },
   { label: "Bridal", href: "#bridal" },
   { label: "Hair Studio", href: "#hair" },
@@ -50,36 +51,75 @@ function ThemeToggle() {
   );
 }
 
-/** Highlights whichever section is currently filling the viewport. */
+/**
+ * Highlights the last linked section whose top has passed a line 35% down
+ * the screen. Position-based (not visibility ratios) so sections taller than
+ * the phone screen still light up, and unlinked sections in between keep the
+ * previous link active.
+ */
 function useActiveSection() {
   const [active, setActive] = useState("#home");
 
   useEffect(() => {
-    const sections = LINKS.map((l) =>
-      document.querySelector<HTMLElement>(l.href)
-    ).filter((el): el is HTMLElement => Boolean(el));
+    let frame = 0;
 
-    if (sections.length === 0) return;
+    const update = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.35;
+      let current = LINKS[0].href;
+      for (const l of LINKS) {
+        const el = document.querySelector<HTMLElement>(l.href);
+        if (el && el.getBoundingClientRect().top <= line) current = l.href;
+      }
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 4;
+      if (atBottom) current = LINKS[LINKS.length - 1].href;
+      setActive(current);
+    };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target.id) setActive(`#${visible.target.id}`);
-      },
-      { threshold: [0.25, 0.5, 0.75], rootMargin: "-20% 0px -35% 0px" }
-    );
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
 
-    sections.forEach((s) => io.observe(s));
-    return () => io.disconnect();
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
   }, []);
 
   return active;
 }
 
+/** Keeps the active pill visible in the swipeable mobile rail. */
+function useCenterActivePill(active: string) {
+  const railRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    const pill = rail?.querySelector<HTMLElement>(`a[href="${active}"]`);
+    if (!rail || !pill) return;
+    const railBox = rail.getBoundingClientRect();
+    const pillBox = pill.getBoundingClientRect();
+    rail.scrollTo({
+      left:
+        rail.scrollLeft +
+        (pillBox.left - railBox.left) -
+        (railBox.width - pillBox.width) / 2,
+      behavior: "smooth",
+    });
+  }, [active]);
+
+  return railRef;
+}
+
 export default function Navbar() {
   const active = useActiveSection();
+  const railRef = useCenterActivePill(active);
 
   return (
     <motion.header
@@ -88,17 +128,17 @@ export default function Navbar() {
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-x-0 top-0 z-50 transform-gpu [backface-visibility:hidden]"
     >
-      <nav className="mx-3 mt-3 flex h-12 max-w-6xl items-center justify-between rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-4 [backface-visibility:hidden] [transform:translateZ(0)] [backdrop-filter:blur(10px)] md:mx-auto md:mt-4 md:h-14 md:px-7">
+      <nav className="mx-3 mt-3 flex h-12 max-w-6xl items-center justify-between rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-4 [backface-visibility:hidden] [transform:translateZ(0)] [backdrop-filter:blur(10px)] md:mx-4 md:mt-4 md:h-14 md:px-7 xl:mx-auto">
         <a href="#home" className="flex items-center gap-2">
           <span className="font-display text-xl font-semibold tracking-wide text-gold-gradient md:text-2xl">
             Labhonitta
           </span>
-          <span className="hidden text-[10px] uppercase tracking-[0.35em] text-rose/70 sm:block">
+          <span className="hidden text-[10px] uppercase tracking-[0.35em] text-rose/70 sm:block lg:hidden xl:block">
             Beauty Parlour
           </span>
         </a>
 
-        <ul className="hidden items-center gap-7 md:flex">
+        <ul className="hidden items-center gap-5 lg:flex xl:gap-7">
           {LINKS.map((l) => (
             <li key={l.href}>
               <a
@@ -125,9 +165,11 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Phones & small tablets: every link stays visible in a swipeable pill rail */}
-      <div className="mx-3 mt-2 md:hidden">
-        <ul className="no-scrollbar flex snap-x snap-mandatory items-center gap-2 overflow-x-auto rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-2 py-2 [backdrop-filter:blur(10px)]">
+      {/* Phones & tablets: every link stays visible in a swipeable pill rail */}
+      <div className="mx-3 mt-2 md:mx-4 lg:hidden">
+        <ul
+          ref={railRef}
+          className="no-scrollbar flex snap-x snap-mandatory items-center gap-2 overflow-x-auto rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-2 py-2 [backdrop-filter:blur(10px)]">
           {LINKS.map((l) => (
             <li key={l.href} className="snap-start">
               <a

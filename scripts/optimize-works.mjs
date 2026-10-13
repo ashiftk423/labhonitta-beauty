@@ -34,7 +34,47 @@ const slug = (s) =>
     .replace(/^-|-$/g, "");
 
 const hex = ({ r, g, b }) =>
-  "#" + [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("");
+  "#" +
+  [r, g, b]
+    .map((v) => Math.round(v).toString(16).padStart(2, "0"))
+    .join("");
+
+/**
+ * Signature colour for wheel dots: the most vivid pixels from the middle of
+ * the frame (the outfit), so dark studio backgrounds don't win.
+ */
+async function accentColor(buf, w, h) {
+  const { data } = await sharp(buf)
+    .extract({
+      left: Math.round(w * 0.2),
+      top: Math.round(h * 0.25),
+      width: Math.round(w * 0.6),
+      height: Math.round(h * 0.6),
+    })
+    .resize(24, 24, { fit: "fill" })
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const px = [];
+  for (let i = 0; i < data.length; i += 3) {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const sat = max === 0 ? 0 : (max - min) / max;
+    px.push({ r, g, b, score: sat * (max / 255) });
+  }
+  px.sort((a, b) => b.score - a.score);
+  const top = px.slice(0, Math.max(1, Math.round(px.length * 0.15)));
+  const sum = top.reduce(
+    (s, p) => ({ r: s.r + p.r, g: s.g + p.g, b: s.b + p.b }),
+    { r: 0, g: 0, b: 0 }
+  );
+  return hex({
+    r: sum.r / top.length,
+    g: sum.g / top.length,
+    b: sum.b / top.length,
+  });
+}
 
 /** Removes webp files this script generated earlier (READMEs stay). */
 function resetDir(rel) {
@@ -55,12 +95,11 @@ async function convert(srcRel, outRel, box = CARD) {
     .webp({ quality: QUALITY, effort: 5 })
     .toBuffer({ resolveWithObject: true });
   writeFileSync(join(PUBLIC, outRel), data);
-  const { dominant } = await sharp(data).stats();
   return {
     src: "/" + outRel.replace(/\\/g, "/"),
     w: info.width,
     h: info.height,
-    color: hex(dominant),
+    color: await accentColor(data, info.width, info.height),
     kb: Math.round(data.length / 1024),
   };
 }

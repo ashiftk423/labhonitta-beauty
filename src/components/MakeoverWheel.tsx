@@ -8,6 +8,9 @@ export type WheelItem = { color: string; label: string };
 
 const AUTO_MS = 5000;
 
+/** Fixed precision so server and browser serialise inline styles identically. */
+const round2 = (v: number) => Math.round(v * 100) / 100;
+
 /**
  * Spinnable makeover wheel. Drag, click a shade, scroll over it, or let it
  * auto-advance every 5 s (spins visually in sync). Haptic tick on each change.
@@ -34,8 +37,8 @@ export default function MakeoverWheel({
   // Gap between dot centres as a % of the disc (ring radius is 42%), so dots
   // shrink instead of overlapping when there are many photos.
   const gap = (2 * Math.PI * 42) / Math.max(n, 1);
-  const dotSize = `min(18px, ${(gap * 0.7).toFixed(2)}%)`;
-  const activeDotSize = `min(26px, ${(gap * 1.05).toFixed(2)}%)`;
+  const dotSize = `min(18px, ${round2(gap * 0.7)}%)`;
+  const activeDotSize = `min(26px, ${round2(gap * 1.05)}%)`;
   const dense = n > 12;
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -270,8 +273,8 @@ export default function MakeoverWheel({
         >
           {items.map((item, i) => {
             const a = (i * seg - 90) * (Math.PI / 180);
-            const x = 50 + Math.cos(a) * 42;
-            const y = 50 + Math.sin(a) * 42;
+            const x = round2(50 + Math.cos(a) * 42);
+            const y = round2(50 + Math.sin(a) * 42);
             const isActive = i === value;
             return (
               <button
@@ -288,7 +291,7 @@ export default function MakeoverWheel({
                   top: `${y}%`,
                   width: isActive ? activeDotSize : dotSize,
                   height: isActive ? activeDotSize : dotSize,
-                  background: item.color,
+                  backgroundColor: item.color,
                   boxShadow: isActive
                     ? `0 0 0 ${dense ? 2 : 3}px rgba(247,237,228,0.85), 0 0 16px rgba(233,201,139,0.9)`
                     : `0 0 0 ${dense ? 1 : 2}px rgba(255,255,255,0.25)`,

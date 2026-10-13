@@ -31,7 +31,27 @@ export default function SmoothScroll({
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
+    // In-page links glide via Lenis and stop below the fixed header, which is
+    // two rows tall on phones and would otherwise cover the section title.
+    const onAnchorClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = (e.target as Element | null)?.closest?.('a[href^="#"]');
+      const hash = link?.getAttribute("href");
+      if (!hash || hash === "#") return;
+      const target = document.querySelector<HTMLElement>(hash);
+      if (!target) return;
+      e.preventDefault();
+      const header = document.querySelector("header");
+      const offset = header ? header.getBoundingClientRect().bottom + 8 : 0;
+      if (hash === "#home") lenis.scrollTo(0);
+      else lenis.scrollTo(target, { offset: -offset });
+      history.replaceState(null, "", hash);
+    };
+    document.addEventListener("click", onAnchorClick);
+
     return () => {
+      document.removeEventListener("click", onAnchorClick);
       gsap.ticker.remove(raf);
       registerLenis(null);
       lenis.destroy();
