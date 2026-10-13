@@ -5,6 +5,8 @@ import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
 import { getBridalLooks } from "@/content/media";
 import { isNear } from "@/lib/isNear";
+import { useSwipe } from "@/lib/useSwipe";
+import SwipeNav from "@/components/SwipeNav";
 
 export default function MakeupTransformation() {
   const LOOKS = getBridalLooks() as (WheelItem & {
@@ -18,6 +20,9 @@ export default function MakeupTransformation() {
   const pickLook = (i: number) => {
     setActive(i);
   };
+  const step = (dir: 1 | -1) =>
+    setActive((i) => (i + dir + LOOKS.length) % LOOKS.length);
+  const swipe = useSwipe(step);
 
   return (
     <section
@@ -33,7 +38,7 @@ export default function MakeupTransformation() {
             One muse, <span className="text-gold-gradient">infinite looks</span>
           </h2>
           <p className="mt-5 max-w-md text-muted">
-            Spin the makeover wheel to glide through our signature
+            Swipe the photo or spin the makeover wheel to glide through our signature
             transformations — from classic red bridal to bold editorial glam.
           </p>
 
@@ -59,7 +64,8 @@ export default function MakeupTransformation() {
 
         <div
           ref={cardRef}
-          className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]"
+          {...swipe}
+          className="relative mx-auto aspect-[3/4] w-full max-w-md touch-pan-y select-none overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]"
         >
           {LOOKS.map((l, i) =>
             isNear(i, active, LOOKS.length) ? (
@@ -81,6 +87,13 @@ export default function MakeupTransformation() {
             key={active}
             className="pointer-events-none absolute inset-0 z-10"
             style={{ animation: "sheen 1s ease-out forwards" }}
+          />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t from-black/45 to-transparent" />
+          <SwipeNav
+            index={active}
+            count={LOOKS.length}
+            onStep={step}
+            className="absolute bottom-4 left-4 z-20"
           />
         </div>
       </div>

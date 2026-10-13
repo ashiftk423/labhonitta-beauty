@@ -5,6 +5,8 @@ import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
 import { getHairStyles } from "@/content/media";
 import { isNear } from "@/lib/isNear";
+import { useSwipe } from "@/lib/useSwipe";
+import SwipeNav from "@/components/SwipeNav";
 
 export default function HairStudio() {
   const STYLES = getHairStyles() as (WheelItem & {
@@ -18,6 +20,9 @@ export default function HairStudio() {
   const pickStyle = (i: number) => {
     setActive(i);
   };
+  const step = (dir: 1 | -1) =>
+    setActive((i) => (i + dir + STYLES.length) % STYLES.length);
+  const swipe = useSwipe(step);
 
   return (
     <section
@@ -28,7 +33,8 @@ export default function HairStudio() {
         <div className="order-2 lg:order-1">
           <div
             ref={cardRef}
-            className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]"
+            {...swipe}
+            className="relative mx-auto aspect-[3/4] w-full max-w-md touch-pan-y select-none overflow-hidden rounded-[2rem] border border-gold/20 bg-plum shadow-[0_30px_120px_-30px_rgba(217,162,115,0.5)]"
           >
             {STYLES.map((s, i) =>
               isNear(i, active, STYLES.length) ? (
@@ -51,6 +57,13 @@ export default function HairStudio() {
               className="pointer-events-none absolute inset-0 z-10"
               style={{ animation: "sheen 1s ease-out forwards" }}
             />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t from-black/45 to-transparent" />
+            <SwipeNav
+              index={active}
+              count={STYLES.length}
+              onStep={step}
+              className="absolute bottom-4 left-4 z-20"
+            />
           </div>
         </div>
 
@@ -63,7 +76,7 @@ export default function HairStudio() {
             style
           </h2>
           <p className="mt-5 max-w-md text-muted">
-            Spin the wheel to preview salon hairstyles — cuts, curls, sleek
+            Swipe the photo or spin the wheel to preview salon hairstyles — cuts, curls, sleek
             blowouts and colour. The same craft we bring to your chair, from
             styling to spa-grade treatments.
           </p>

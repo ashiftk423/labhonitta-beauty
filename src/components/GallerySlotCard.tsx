@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import type { GallerySlot } from "@/content/media";
+import { useSwipe } from "@/lib/useSwipe";
 
 const SLIDE_MS = 3000;
+const HOLD_AFTER_SWIPE_MS = 5000;
 
 type Props = {
   slot: GallerySlot;
@@ -21,8 +23,8 @@ export default function GallerySlotCard({ slot, index }: Props) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [failed, setFailed] = useState<Record<string, boolean>>({});
-  const startX = useRef<number | null>(null);
-  const dragging = useRef(false);
+  const pressed = useRef(false);
+  const resumeTimer = useRef<number | null>(null);
 
   const usable = images.filter((img) => !failed[img.src]);
   const count = usable.length;
@@ -48,29 +50,39 @@ export default function GallerySlotCard({ slot, index }: Props) {
     return () => window.clearInterval(id);
   }, [showImage, count, paused, go]);
 
+  // After a manual swipe, hold the photo a little longer before auto-play resumes.
+  const holdManual = useCallback(() => {
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
+    resumeTimer.current = window.setTimeout(() => {
+      if (!pressed.current) setPaused(false);
+    }, HOLD_AFTER_SWIPE_MS);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
+    },
+    []
+  );
+
+  const swipe = useSwipe((dir) => go(dir));
+
   const onPointerDown = (e: React.PointerEvent) => {
-    startX.current = e.clientX;
-    dragging.current = true;
+    pressed.current = true;
     setPaused(true);
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    swipe.onPointerDown(e);
   };
 
   const onPointerUp = (e: React.PointerEvent) => {
-    if (!dragging.current || startX.current == null) {
-      setPaused(false);
-      return;
-    }
-    const dx = e.clientX - startX.current;
-    dragging.current = false;
-    startX.current = null;
-    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
-    setPaused(false);
+    pressed.current = false;
+    swipe.onPointerUp(e);
+    holdManual();
   };
 
   const onPointerCancel = () => {
-    dragging.current = false;
-    startX.current = null;
-    setPaused(false);
+    pressed.current = false;
+    swipe.onPointerCancel();
+    holdManual();
   };
 
   return (
@@ -84,7 +96,7 @@ export default function GallerySlotCard({ slot, index }: Props) {
       onPointerCancel={onPointerCancel}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => {
-        if (!dragging.current) setPaused(false);
+        if (!pressed.current) setPaused(false);
       }}
       className={`group relative touch-pan-y overflow-hidden rounded-3xl border border-[color:var(--card-border)] bg-gradient-to-br ${slot.fallbackGrad} ${slot.span} select-none`}
       aria-label={`${slot.caption} gallery slot`}
@@ -129,7 +141,7 @@ export default function GallerySlotCard({ slot, index }: Props) {
       </div>
 
       {count > 1 && count <= 8 && (
-        <div className="absolute bottom-4 right-4 flex gap-1.5">
+        <div className="absolute right-3 top-3 flex gap-1.5 rounded-full bg-black/30 px-2 py-1.5 [backdrop-filter:blur(6px)]">
           {usable.map((_, i) => (
             <span
               key={i}
@@ -141,7 +153,7 @@ export default function GallerySlotCard({ slot, index }: Props) {
         </div>
       )}
       {count > 8 && (
-        <span className="absolute bottom-4 right-4 rounded-full bg-black/45 px-2.5 py-1 text-[10px] tabular-nums tracking-[0.15em] text-white/85 [backdrop-filter:blur(6px)]">
+        <span className="absolute right-3 top-3 rounded-full bg-black/45 px-2.5 py-1 text-[10px] tabular-nums tracking-[0.15em] text-white/85 [backdrop-filter:blur(6px)]">
           {current + 1} / {count}
         </span>
       )}
