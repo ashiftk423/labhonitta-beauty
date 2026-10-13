@@ -33,8 +33,9 @@ export default function About() {
             Creates Perfection
           </h2>
           <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-muted lg:mx-0">
-            {BUSINESS.name} is a name trusted by hundreds of brides across{" "}
-            {BUSINESS.region}. We believe every bride is unique and deserves a
+            For over {STATS.experience.replace("+", "")} years,{" "}
+            {BUSINESS.name} has been the name {STATS.clients} brides across{" "}
+            {BUSINESS.region} — and celebrities like Manju Warrier — trust. We believe every bride is unique and deserves a
             look that enhances her natural beauty and inner glow — from the
             first trial to the final touch-up on your big day.
           </p>

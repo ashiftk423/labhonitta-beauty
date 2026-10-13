@@ -21,7 +21,7 @@ const body = Inter({
 export const metadata: Metadata = {
   title: "Labhonitta Ladies Beauty Parlour | Bridal Makeup & Salon — Thrissur",
   description:
-    "Award-winning bridal makeup, artist makeup, hair cutting & hair treatments in Thrissur, Kerala. A premium 3D experience by Labhonitta Ladies Beauty Parlour.",
+    "Celebrity makeup artist in Thrissur, Kerala — 20+ years of expertise and 1K+ happy brides. Bridal makeup, artist makeup, hair styling & hair treatments at Labhonitta Ladies Beauty Parlour.",
   keywords: [
     "bridal makeup Thrissur",
     "beauty parlour Thrissur",
@@ -31,7 +31,8 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Labhonitta Ladies Beauty Parlour",
-    description: "Bridal & artist makeup, hair cutting and treatments in Thrissur.",
+    description:
+      "Celebrity makeup artist · 20+ years of expertise · 1K+ happy brides. Bridal & artist makeup, hair styling and treatments in Thrissur.",
     type: "website",
   },
 };

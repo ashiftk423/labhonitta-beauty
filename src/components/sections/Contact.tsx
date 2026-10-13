@@ -38,7 +38,7 @@ export default function Contact() {
               <span className="text-gold-gradient">perfect look</span>
             </h2>
             <p className="mt-4 max-w-md text-cream/65">
-              Rated 4.9★ by 175+ happy clients. Reserve your bridal trial or
+              Trusted by 1K+ happy brides, rated 4.9★ on Google. Reserve your bridal trial or
               salon appointment — we&apos;ll take care of the rest.
             </p>
 

@@ -108,10 +108,10 @@ export default function Hero() {
             animate="show"
             className="mx-auto mt-7 max-w-md text-[15px] leading-relaxed text-muted lg:mx-0"
           >
-            Bridal makeup, artist makeovers, precision hair cutting and
-            rejuvenating treatments — trusted by hundreds of brides across{" "}
-            {BUSINESS.region}, and rated {STATS.rating} by {STATS.clients}{" "}
-            clients.
+            Celebrity makeup artist with {STATS.experience} years of
+            expertise — bridal makeup, artist makeovers, hair styling and
+            treatments, trusted by {STATS.clients} happy brides across{" "}
+            {BUSINESS.region}.
           </motion.p>
 
           <motion.div

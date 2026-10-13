@@ -18,20 +18,21 @@ export const BUSINESS = {
   founderRole: "Founder & Chief Makeup Artist",
 };
 
-/** Hero + about statistics. Update the numbers once the client confirms them. */
+/** Hero + about statistics (confirmed by the client). */
 export const STATS = {
   rating: "4.9★",
   ratingLabel: "Google Rating",
-  clients: "175+",
-  clientsLabel: "Happy Clients",
-  experience: "10+",
-  experienceLabel: "Years of Experience",
+  clients: "1K+",
+  clientsLabel: "Happy Brides",
+  experience: "20+",
+  experienceLabel: "Years of Expertise",
 };
 
-/** The two circular seals that overlap the hero photo. */
+/** The circular seals that overlap the hero photo. */
 export const HERO_SEALS = [
-  { top: STATS.experience, bottom: "Years of\nExcellence" },
-  { top: "", bottom: "Central Kerala's\nTrusted Bridal\nMakeup Expert" },
+  { top: STATS.experience, bottom: "Years of\nExpertise" },
+  { top: STATS.clients, bottom: "Happy\nBrides" },
+  { top: "★", bottom: "Celebrity\nMakeup Artist" },
 ];
 
 /** Icon strip directly under the hero. */
