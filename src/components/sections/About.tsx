@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ABOUT_IMAGE, BUSINESS, STATS } from "@/content/site";
+import { InstagramIcon } from "@/components/icons";
 
 const STAT_ROWS = [
   { glyph: "🏆", value: STATS.experience, label: STATS.experienceLabel },
@@ -46,6 +47,14 @@ export default function About() {
           <p className="mt-1 text-[11px] uppercase tracking-[0.26em] text-muted-soft">
             {BUSINESS.founderRole}
           </p>
+          <a
+            href={BUSINESS.instagramUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mx-auto mt-3 flex w-fit items-center gap-2 text-sm text-rose transition-colors hover:text-gold lg:mx-0"
+          >
+            <InstagramIcon /> {BUSINESS.instagramHandle}
+          </a>
 
           <a
             href="#services"

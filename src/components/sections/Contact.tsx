@@ -1,21 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { BUSINESS } from "@/content/site";
+import { ClockIcon, InstagramIcon, PhoneIcon, PinIcon } from "@/components/icons";
 
 const INFO = [
   {
     label: "Visit us",
-    value:
-      "First floor, Kesaveeyam Building, Sreepadam Avenue, Cheroor Rd, Chembukkav, Thrissur, Kerala 680020",
-    href: "https://maps.google.com/?q=Labhonitta+ladies+Beauty+Parlour+Thrissur",
+    value: BUSINESS.address,
+    href: BUSINESS.mapsUrl,
+    Icon: PinIcon,
   },
-  { label: "Call / WhatsApp", value: "+91 90202 40426", href: "tel:+919020240426" },
   {
-    label: "Website",
-    value: "labhonittabeautyparlour.com",
-    href: "https://labhonittabeautyparlour.com",
+    label: "Call / WhatsApp",
+    value: BUSINESS.phone,
+    href: BUSINESS.phoneHref,
+    Icon: PhoneIcon,
   },
-  { label: "Hours", value: "Open daily · Closes 7:00 PM", href: undefined },
+  {
+    label: "Instagram",
+    value: BUSINESS.instagramHandle,
+    href: BUSINESS.instagramUrl,
+    Icon: InstagramIcon,
+  },
+  { label: "Hours", value: BUSINESS.hours, href: undefined, Icon: ClockIcon },
 ];
 
 export default function Contact() {
@@ -43,23 +51,28 @@ export default function Contact() {
             </p>
 
             <ul className="mt-8 space-y-5">
-              {INFO.map((it) => (
-                <li key={it.label}>
-                  <p className="text-[11px] uppercase tracking-[0.3em] text-gold/70">
-                    {it.label}
-                  </p>
-                  {it.href ? (
-                    <a
-                      href={it.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-cream/85 transition-colors hover:text-gold"
-                    >
-                      {it.value}
-                    </a>
-                  ) : (
-                    <p className="text-cream/85">{it.value}</p>
-                  )}
+              {INFO.map(({ label, value, href, Icon }) => (
+                <li key={label} className="flex gap-4">
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/30 text-gold">
+                    <Icon />
+                  </span>
+                  <span>
+                    <p className="text-[11px] uppercase tracking-[0.3em] text-gold/70">
+                      {label}
+                    </p>
+                    {href ? (
+                      <a
+                        href={href}
+                        target={href.startsWith("http") ? "_blank" : undefined}
+                        rel="noreferrer"
+                        className="text-cream/85 transition-colors hover:text-gold"
+                      >
+                        {value}
+                      </a>
+                    ) : (
+                      <p className="text-cream/85">{value}</p>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -101,6 +114,40 @@ export default function Contact() {
               Book on WhatsApp
             </button>
           </form>
+        </div>
+
+        <div className="mt-12 overflow-hidden rounded-[1.75rem] border border-gold/20 bg-[color:var(--surface)]">
+          <iframe
+            src={BUSINESS.mapsEmbed}
+            title={`${BUSINESS.name} on Google Maps`}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="block h-[260px] w-full md:h-[340px]"
+          />
+          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+            <p className="font-display text-lg text-cream">
+              Find us in Chembukkav, {BUSINESS.city}
+            </p>
+            <div className="flex gap-2">
+              <a
+                href={BUSINESS.mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rosegold to-rose px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink shadow-lg transition-transform hover:scale-105"
+              >
+                <PinIcon /> Get directions
+              </a>
+              <a
+                href={BUSINESS.instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 text-gold transition hover:bg-gold/10"
+              >
+                <InstagramIcon />
+              </a>
+            </div>
+          </div>
         </div>
       </motion.div>
     </section>

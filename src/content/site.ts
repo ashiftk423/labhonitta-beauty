@@ -16,6 +16,14 @@ export const BUSINESS = {
     "https://wa.me/919020240426?text=Hi%20Labhonitta%2C%20I%27d%20like%20to%20book%20an%20appointment.",
   founder: "Soumya",
   founderRole: "Founder & Chief Makeup Artist",
+  address:
+    "First floor, Kesaveeyam Building, Sreepadam Avenue, Cheroor Rd, Chembukkav, Thrissur, Kerala 680020",
+  hours: "Open daily · Closes 7:00 PM",
+  mapsUrl: "https://maps.app.goo.gl/GJ1rgt9qTV5YeHFa9",
+  mapsEmbed:
+    "https://maps.google.com/maps?q=10.5350157,76.2194474&z=17&output=embed",
+  instagramUrl: "https://www.instagram.com/labhonitta.by.soumya/",
+  instagramHandle: "@labhonitta.by.soumya",
 };
 
 /** Hero + about statistics (confirmed by the client). */

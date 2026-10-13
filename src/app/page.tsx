@@ -22,8 +22,8 @@ export default function Home() {
       <main className="relative z-10 isolate">
         <Hero />
         <ServiceStrip />
-        <About />
         <SignatureClients />
+        <About />
         <WorkShowcase />
         <Services />
         <MakeupTransformation />
