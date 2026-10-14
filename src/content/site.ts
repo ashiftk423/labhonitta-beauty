@@ -49,19 +49,19 @@ export const SERVICE_STRIP = [
     title: "Bridal Makeup",
     desc: "Look your best on your big day",
     glyph: "💍",
-    href: "#bridal",
+    href: "#services",
   },
   {
     title: "Reception Makeup",
     desc: "Glamorous looks for your special moments",
     glyph: "✨",
-    href: "#bridal",
+    href: "#services",
   },
   {
     title: "Engagement Makeup",
     desc: "Elegant & picture perfect makeup",
     glyph: "👑",
-    href: "#bridal",
+    href: "#services",
   },
   {
     title: "Party Makeup",

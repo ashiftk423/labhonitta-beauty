@@ -17,7 +17,6 @@ const LINKS = [
   { label: "About", href: "#about" },
   { label: "Work", href: "#work" },
   { label: "Services", href: "#services" },
-  { label: "Bridal", href: "#bridal" },
   { label: "Hair Studio", href: "#hair" },
   { label: "Gallery", href: "#gallery" },
   { label: "Contact", href: "#contact" },
@@ -145,9 +144,6 @@ export default function Navbar() {
             <span className="-mt-0.5 self-end font-display text-[13px] italic text-rose md:text-sm">
               by Soumya
             </span>
-          </span>
-          <span className="hidden text-[10px] uppercase tracking-[0.35em] text-rose/70 sm:block lg:hidden xl:block">
-            Beauty Parlour
           </span>
         </a>
 

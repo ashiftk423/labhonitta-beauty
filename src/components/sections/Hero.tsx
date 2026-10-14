@@ -2,7 +2,18 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BUSINESS, HERO_IMAGE, HERO_SEALS, STATS } from "@/content/site";
+import { BUSINESS, HERO_SEALS, STATS } from "@/content/site";
+import { getBridalLooks } from "@/content/media";
+import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
+import SwipeNav from "@/components/SwipeNav";
+import { isNear } from "@/lib/isNear";
+import { useSwipe } from "@/lib/useSwipe";
+
+const LOOKS = getBridalLooks() as (WheelItem & {
+  src: string;
+  tag?: string;
+  focus?: string;
+})[];
 
 const fade = {
   hidden: { opacity: 0, y: 34 },
@@ -57,7 +68,10 @@ function Seal({ top, bottom }: { top: string; bottom: string }) {
 }
 
 export default function Hero() {
-  const [src, setSrc] = useState(HERO_IMAGE.src);
+  const [active, setActive] = useState(0);
+  const step = (dir: 1 | -1) =>
+    setActive((i) => (i + dir + LOOKS.length) % LOOKS.length);
+  const swipe = useSwipe(step);
 
   return (
     <section
@@ -141,26 +155,58 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* ---------------- photo ---------------- */}
+        {/* ---------------- bridal lookbook card ---------------- */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="relative order-1 lg:order-2"
         >
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[2rem] border border-gold/25 bg-plum shadow-[0_40px_120px_-40px_rgba(0,0,0,0.55)] sm:aspect-[3/4] lg:max-w-none lg:rounded-[2.5rem]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={src}
-              srcSet={src === HERO_IMAGE.src ? HERO_IMAGE.srcSet : undefined}
-              sizes="(min-width: 1024px) 560px, 420px"
-              alt={HERO_IMAGE.alt}
-              fetchPriority="high"
-              decoding="async"
-              onError={() => setSrc(HERO_IMAGE.fallback)}
-              className="h-full w-full object-cover object-top"
+          <div
+            {...swipe}
+            className="relative mx-auto aspect-[4/5] w-full max-w-[420px] touch-pan-y select-none overflow-hidden rounded-[2rem] border border-gold/25 bg-plum shadow-[0_40px_120px_-40px_rgba(0,0,0,0.55)] sm:aspect-[3/4] lg:max-w-none lg:rounded-[2.5rem]"
+          >
+            {LOOKS.map((l, i) =>
+              isNear(i, active, LOOKS.length) ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={l.src}
+                  src={l.src}
+                  alt={i === active ? `${l.label} — bridal makeup by ${BUSINESS.founder}` : ""}
+                  fetchPriority={i === 0 ? "high" : undefined}
+                  decoding="async"
+                  draggable={false}
+                  className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ease-out"
+                  style={{
+                    objectPosition: l.focus ?? "50% 20%",
+                    backgroundColor: l.color,
+                    opacity: i === active ? 1 : 0,
+                    animation: i === active ? "kenburns 7s ease-out forwards" : "none",
+                  }}
+                />
+              ) : null
+            )}
+            <div
+              key={active}
+              className="pointer-events-none absolute inset-0 z-10"
+              style={{ animation: "sheen 1s ease-out forwards" }}
             />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent lg:bg-gradient-to-r lg:from-[color:var(--bg)]/45 lg:via-transparent lg:to-transparent" />
+            <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/45 via-transparent to-transparent lg:bg-gradient-to-r lg:from-[color:var(--bg)]/45 lg:via-transparent lg:to-transparent" />
+
+            <SwipeNav
+              index={active}
+              count={LOOKS.length}
+              onStep={step}
+              className="absolute left-4 top-4 z-20"
+            />
+            <MakeoverWheel
+              items={LOOKS}
+              value={active}
+              onChange={setActive}
+              icon="💄"
+              onCard
+              className="absolute bottom-[84px] right-3 sm:bottom-[92px] lg:bottom-auto lg:right-5 lg:top-5"
+            />
           </div>
 
           {/* seals overlap the bottom-left corner of the photo */}

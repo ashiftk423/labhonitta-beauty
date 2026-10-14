@@ -7,7 +7,6 @@ import About from "@/components/sections/About";
 import SignatureClients from "@/components/sections/SignatureClients";
 import WorkShowcase from "@/components/sections/WorkShowcase";
 import Services from "@/components/sections/Services";
-import MakeupTransformation from "@/components/sections/MakeupTransformation";
 import HairStudio from "@/components/sections/HairStudio";
 import Gallery from "@/components/sections/Gallery";
 import Contact from "@/components/sections/Contact";
@@ -26,7 +25,6 @@ export default function Home() {
         <About />
         <WorkShowcase />
         <Services />
-        <MakeupTransformation />
         <HairStudio />
         <Gallery />
         <Contact />
