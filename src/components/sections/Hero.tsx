@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { BUSINESS, HERO_SEALS, STATS } from "@/content/site";
 import { getBridalLooks } from "@/content/media";
@@ -9,6 +9,7 @@ import SwipeNav from "@/components/SwipeNav";
 import { isNear } from "@/lib/isNear";
 import { useSwipe } from "@/lib/useSwipe";
 import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
+import { useAutoSlide } from "@/lib/useAutoSlide";
 
 const LOOKS = getBridalLooks() as (WheelItem & {
   src: string;
@@ -70,10 +71,20 @@ function Seal({ top, bottom }: { top: string; bottom: string }) {
 
 export default function Hero() {
   const [active, setActive] = useState(0);
-  const step = (dir: 1 | -1) =>
+  const lastTouchRef = useRef(0);
+  const pick = (i: number) => {
+    lastTouchRef.current = Date.now();
+    setActive(i);
+  };
+  const step = (dir: 1 | -1) => {
+    lastTouchRef.current = Date.now();
     setActive((i) => (i + dir + LOOKS.length) % LOOKS.length);
+  };
   const swipe = useSwipe(step);
   const { ref: cardRef, visibility } = useFloatingVisibility<HTMLDivElement>();
+  useAutoSlide(cardRef, lastTouchRef, () =>
+    setActive((i) => (i + 1) % LOOKS.length)
+  );
 
   return (
     <section
@@ -167,7 +178,7 @@ export default function Hero() {
             <MakeoverWheel
               items={LOOKS}
               value={active}
-              onChange={setActive}
+              onChange={pick}
               icon="💄"
               compact
             />
@@ -255,7 +266,7 @@ export default function Hero() {
         <MakeoverWheel
           items={LOOKS}
           value={active}
-          onChange={setActive}
+          onChange={pick}
           icon="💄"
           visibility={visibility}
         />
