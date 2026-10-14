@@ -26,7 +26,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/heritage-gold-bride.webp",
     "w": 929,
     "h": 1440,
-    "color": "#bf412f",
+    "color": "#c0432f",
     "label": "Heritage Gold Bride",
     "tag": "Kanjeevaram Bridal",
     "focus": "50% 20%"
@@ -35,7 +35,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/rose-gold-glow.webp",
     "w": 853,
     "h": 1280,
-    "color": "#bd8463",
+    "color": "#bf8465",
     "label": "Rose Gold Glow",
     "tag": "HD Bridal Makeup",
     "focus": "50% 20%"
@@ -44,7 +44,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/temple-jewel-bride.webp",
     "w": 914,
     "h": 1440,
-    "color": "#c15a31",
+    "color": "#c15b31",
     "label": "Temple Jewel Bride",
     "tag": "Traditional Bridal",
     "focus": "50% 20%"
@@ -53,7 +53,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/crimson-silk-bride.webp",
     "w": 867,
     "h": 1156,
-    "color": "#b63b2d",
+    "color": "#b53b2d",
     "label": "Crimson Silk Bride",
     "tag": "Traditional Bridal",
     "focus": "50% 20%"
@@ -62,7 +62,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/emerald-grace.webp",
     "w": 810,
     "h": 1440,
-    "color": "#d0987e",
+    "color": "#d1997f",
     "label": "Emerald Grace",
     "tag": "Bridal Makeup",
     "focus": "50% 20%"
@@ -71,7 +71,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/scarlet-garden-bride.webp",
     "w": 960,
     "h": 1440,
-    "color": "#a3442f",
+    "color": "#a3432f",
     "label": "Scarlet Garden Bride",
     "tag": "Outdoor Bridal",
     "focus": "50% 20%"
@@ -80,7 +80,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/ivory-gown-bride.webp",
     "w": 810,
     "h": 1440,
-    "color": "#ae7d66",
+    "color": "#af7d66",
     "label": "Ivory Gown Bride",
     "tag": "Christian Bridal",
     "focus": "50% 20%"
@@ -89,7 +89,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/royal-purple-silk.webp",
     "w": 810,
     "h": 1440,
-    "color": "#c07d53",
+    "color": "#c17d53",
     "label": "Royal Purple Silk",
     "tag": "Kanjeevaram Bridal",
     "focus": "50% 20%"
@@ -107,7 +107,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/golden-kerala-bride.webp",
     "w": 878,
     "h": 1170,
-    "color": "#dc623c",
+    "color": "#dd633d",
     "label": "Golden Kerala Bride",
     "tag": "Traditional Bridal",
     "focus": "50% 20%"
@@ -116,7 +116,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/classic-kerala-bride.webp",
     "w": 720,
     "h": 1280,
-    "color": "#c57e2c",
+    "color": "#c57d2a",
     "label": "Classic Kerala Bride",
     "tag": "Traditional Bridal",
     "focus": "50% 20%"
@@ -125,7 +125,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/white-lace-elegance.webp",
     "w": 768,
     "h": 1376,
-    "color": "#b7795c",
+    "color": "#b8795c",
     "label": "White Lace Elegance",
     "tag": "Christian Bridal",
     "focus": "50% 20%"
@@ -143,7 +143,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/pearl-saree-bride.webp",
     "w": 648,
     "h": 1440,
-    "color": "#c88f72",
+    "color": "#c89072",
     "label": "Pearl Saree Bride",
     "tag": "Bridal Makeup",
     "focus": "50% 20%"
@@ -152,7 +152,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/maroon-muhurtham.webp",
     "w": 810,
     "h": 1440,
-    "color": "#af7f46",
+    "color": "#b07f46",
     "label": "Maroon Muhurtham",
     "tag": "Traditional Bridal",
     "focus": "50% 20%"
@@ -161,7 +161,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/pink-silk-celebration.webp",
     "w": 960,
     "h": 1280,
-    "color": "#dc4b44",
+    "color": "#dd4a44",
     "label": "Pink Silk Celebration",
     "tag": "Bridal Makeup",
     "focus": "50% 20%"
@@ -170,7 +170,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/golden-kasavu.webp",
     "w": 810,
     "h": 1440,
-    "color": "#ae8c5f",
+    "color": "#b08d60",
     "label": "Golden Kasavu",
     "tag": "Kerala Bridal",
     "focus": "50% 20%"
@@ -179,7 +179,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/set-saree-classic.webp",
     "w": 810,
     "h": 1440,
-    "color": "#a17f51",
+    "color": "#a38154",
     "label": "Set Saree Classic",
     "tag": "Kerala Bridal",
     "focus": "50% 20%"
@@ -188,7 +188,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/ivory-and-gold.webp",
     "w": 720,
     "h": 1280,
-    "color": "#b9a060",
+    "color": "#bba161",
     "label": "Ivory & Gold",
     "tag": "Kerala Bridal",
     "focus": "50% 20%"
@@ -206,7 +206,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/wine-silk-bride.webp",
     "w": 810,
     "h": 1440,
-    "color": "#9a7147",
+    "color": "#9b7147",
     "label": "Wine Silk Bride",
     "tag": "Traditional Bridal",
     "focus": "50% 20%"
@@ -215,7 +215,7 @@ export const BRIDAL_PHOTOS: WorkPhoto[] = [
     "src": "/images/bridal/peacock-blue-bride.webp",
     "w": 947,
     "h": 1440,
-    "color": "#e69524",
+    "color": "#e79524",
     "label": "Peacock Blue Bride",
     "tag": "Bridal Makeup",
     "focus": "50% 20%"
@@ -236,7 +236,7 @@ export const HAIR_PHOTOS: WorkPhoto[] = [
     "src": "/images/hair/jasmine-bridal-bun.webp",
     "w": 720,
     "h": 1280,
-    "color": "#9e3b50",
+    "color": "#9f3a51",
     "label": "Jasmine Bridal Bun",
     "tag": "Bridal Hairdo",
     "focus": "50% 20%"
@@ -254,7 +254,7 @@ export const HAIR_PHOTOS: WorkPhoto[] = [
     "src": "/images/hair/silky-straight.webp",
     "w": 958,
     "h": 1440,
-    "color": "#746b64",
+    "color": "#756a64",
     "label": "Silky Straight",
     "tag": "Smoothening",
     "focus": "50% 20%"
@@ -263,7 +263,7 @@ export const HAIR_PHOTOS: WorkPhoto[] = [
     "src": "/images/hair/glam-waves.webp",
     "w": 960,
     "h": 1393,
-    "color": "#4d3e35",
+    "color": "#4e3f36",
     "label": "Glam Waves",
     "tag": "Curls",
     "focus": "50% 20%"
@@ -272,7 +272,7 @@ export const HAIR_PHOTOS: WorkPhoto[] = [
     "src": "/images/hair/soft-brunette-curls.webp",
     "w": 700,
     "h": 1308,
-    "color": "#4c3b31",
+    "color": "#4d3b31",
     "label": "Soft Brunette Curls",
     "tag": "Curls",
     "focus": "50% 20%"
@@ -302,7 +302,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/lilac-glam-portrait.webp",
     "w": 811,
     "h": 1440,
-    "color": "#be8065",
+    "color": "#be7f64",
     "label": "Lilac Glam Portrait",
     "tag": "Photoshoot",
     "focus": "50% 20%"
@@ -311,7 +311,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/egyptian-queen.webp",
     "w": 960,
     "h": 1440,
-    "color": "#ab653b",
+    "color": "#aa643a",
     "label": "Egyptian Queen",
     "tag": "Theme Makeup",
     "focus": "50% 20%"
@@ -329,7 +329,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/black-and-gold-editorial.webp",
     "w": 960,
     "h": 1255,
-    "color": "#9e7754",
+    "color": "#9e7654",
     "label": "Black & Gold Editorial",
     "tag": "Group Shoot",
     "focus": "50% 20%"
@@ -338,7 +338,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/wine-silk-elegance.webp",
     "w": 810,
     "h": 1440,
-    "color": "#c79a73",
+    "color": "#c89973",
     "label": "Wine Silk Elegance",
     "tag": "Party Makeup",
     "focus": "50% 20%"
@@ -365,7 +365,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/emerald-drape.webp",
     "w": 958,
     "h": 1440,
-    "color": "#7d5839",
+    "color": "#7c5738",
     "label": "Emerald Drape",
     "tag": "Photoshoot",
     "focus": "50% 20%"
@@ -374,7 +374,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/golden-era-ensemble.webp",
     "w": 952,
     "h": 1440,
-    "color": "#a38465",
+    "color": "#a38464",
     "label": "Golden Era Ensemble",
     "tag": "Group Shoot",
     "focus": "50% 20%"
@@ -383,7 +383,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/green-silk-glow.webp",
     "w": 720,
     "h": 1280,
-    "color": "#cd7f52",
+    "color": "#cd7e52",
     "label": "Green Silk Glow",
     "tag": "Engagement Look",
     "focus": "50% 20%"
@@ -392,7 +392,7 @@ export const WORK_PHOTOS: WorkPhoto[] = [
     "src": "/images/work/noir-editorial.webp",
     "w": 960,
     "h": 1434,
-    "color": "#867261",
+    "color": "#867161",
     "label": "Noir Editorial",
     "tag": "Theme Makeup",
     "focus": "50% 20%"
@@ -413,7 +413,7 @@ export const SIGNATURE_PHOTOS: WorkPhoto[] = [
     "src": "/images/signature/celebrity-glam.webp",
     "w": 810,
     "h": 1440,
-    "color": "#d26c58",
+    "color": "#d36d59",
     "label": "Celebrity Glam",
     "tag": "Celebrity Client",
     "focus": "50% 20%"
@@ -422,7 +422,7 @@ export const SIGNATURE_PHOTOS: WorkPhoto[] = [
     "src": "/images/signature/shining-the-brightest-star.webp",
     "w": 960,
     "h": 1355,
-    "color": "#a2371f",
+    "color": "#a33720",
     "label": "Shining the Brightest Star",
     "tag": "Celebrity Client",
     "focus": "50% 20%"
@@ -431,7 +431,7 @@ export const SIGNATURE_PHOTOS: WorkPhoto[] = [
     "src": "/images/signature/celebrity-makeover.webp",
     "w": 813,
     "h": 1440,
-    "color": "#8b294a",
+    "color": "#8a294a",
     "label": "Celebrity Makeover",
     "tag": "Celebrity Client",
     "focus": "50% 20%"

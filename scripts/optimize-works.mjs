@@ -26,6 +26,16 @@ const DEFAULT_FOCUS = "50% 20%";
 const CARD = { width: 960, height: 1440 };
 const QUALITY = 78;
 
+const WATERMARK = {
+  file: join(PUBLIC, "images/watermark/logo transparant.png"),
+  /** Logo width as a share of the photo's shorter side. */
+  width: 0.46,
+  /** Vertical centre of the logo — below faces, above most caption overlays. */
+  y: 0.68,
+  opacity: 0.45,
+  shadowOpacity: 0.4,
+};
+
 const slug = (s) =>
   s
     .toLowerCase()
@@ -76,6 +86,44 @@ async function accentColor(buf, w, h) {
   });
 }
 
+/** Logo cropped to its visible pixels — the source PNG has wide empty margins. */
+const watermarkLogo = await sharp(WATERMARK.file).ensureAlpha().trim().png().toBuffer();
+
+/** Scales the alpha channel of an RGBA buffer and paints every pixel one colour. */
+async function tint(png, rgb, opacity) {
+  const { data, info } = await sharp(png)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  for (let i = 0; i < data.length; i += 4) {
+    data[i] = rgb[0];
+    data[i + 1] = rgb[1];
+    data[i + 2] = rgb[2];
+    data[i + 3] = Math.round(data[i + 3] * opacity);
+  }
+  return sharp(data, { raw: info }).png().toBuffer();
+}
+
+/** Composite layers for a soft-shadowed logo baked into a w×h photo. */
+async function watermarkLayers(w, h) {
+  const logoW = Math.round(Math.min(w, h) * WATERMARK.width);
+  const logo = await sharp(watermarkLogo).resize({ width: logoW }).png().toBuffer();
+  const { height: logoH } = await sharp(logo).metadata();
+  const blur = Math.max(2, Math.round(logoW / 120));
+  const pad = blur * 3;
+  const shadow = await sharp(await tint(logo, [0, 0, 0], WATERMARK.shadowOpacity))
+    .extend({ top: pad, bottom: pad, left: pad, right: pad, background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .blur(blur)
+    .png()
+    .toBuffer();
+  const left = Math.round((w - logoW) / 2);
+  const top = Math.min(h - logoH - 4, Math.round(h * WATERMARK.y - logoH / 2));
+  return [
+    { input: shadow, left: left - pad, top: top - pad + 1 },
+    { input: await tint(logo, [255, 255, 255], WATERMARK.opacity), left, top },
+  ];
+}
+
 /** Removes webp files this script generated earlier (READMEs stay). */
 function resetDir(rel) {
   const dir = join(PUBLIC, rel);
@@ -87,19 +135,21 @@ function resetDir(rel) {
 
 async function convert(srcRel, outRel, box = CARD) {
   const input = join(WORKS, srcRel);
-  const pipeline = sharp(input, { failOn: "none" })
+  const { data: resized, info } = await sharp(input, { failOn: "none" })
     .rotate()
-    .resize({ ...box, fit: "inside", withoutEnlargement: true });
-  const { data, info } = await pipeline
-    .clone()
-    .webp({ quality: QUALITY, effort: 5 })
+    .resize({ ...box, fit: "inside", withoutEnlargement: true })
+    .png()
     .toBuffer({ resolveWithObject: true });
+  const data = await sharp(resized)
+    .composite(await watermarkLayers(info.width, info.height))
+    .webp({ quality: QUALITY, effort: 5 })
+    .toBuffer();
   writeFileSync(join(PUBLIC, outRel), data);
   return {
     src: "/" + outRel.replace(/\\/g, "/"),
     w: info.width,
     h: info.height,
-    color: await accentColor(data, info.width, info.height),
+    color: await accentColor(resized, info.width, info.height),
     kb: Math.round(data.length / 1024),
   };
 }

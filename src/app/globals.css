@@ -141,6 +141,13 @@ body {
   transition: background-color 0.45s ease, color 0.45s ease;
 }
 
+/* Discourage saving the artist's photos (long-press menu, drag-to-desktop) */
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 /* Lenis smooth-scroll requirements */
 html.lenis,
 html.lenis body {
