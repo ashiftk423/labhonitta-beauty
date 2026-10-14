@@ -22,8 +22,7 @@ export default function MakeoverWheel({
   icon,
   autoPlay = false,
   visibility = 1,
-  onCard = false,
-  className = "",
+  compact = false,
 }: {
   items: WheelItem[];
   value: number;
@@ -33,9 +32,8 @@ export default function MakeoverWheel({
   /** 0→1 mobile floating opacity, scroll-driven by the owning section.
    *  Ignored on desktop where the wheel is always inline & fully visible. */
   visibility?: number;
-  /** Compact glass dial pinned on top of a photo card (position via className). */
-  onCard?: boolean;
-  className?: string;
+  /** Smaller desktop dial without the keyboard hint, for tight layouts. */
+  compact?: boolean;
 }) {
   const n = items.length;
   const seg = 360 / n;
@@ -226,7 +224,7 @@ export default function MakeoverWheel({
 
   // Floating opacity/slide only applies below lg. On desktop the wheel is inline.
   const floatStyle =
-    mounted && !isInline && !onCard
+    mounted && !isInline
       ? {
           opacity: visibility,
           transform: `translateY(${(1 - visibility) * 22}px)`,
@@ -240,26 +238,18 @@ export default function MakeoverWheel({
     <div
       ref={rootRef}
       style={floatStyle}
-      onPointerDown={onCard ? (e) => e.stopPropagation() : undefined}
-      onPointerUp={onCard ? (e) => e.stopPropagation() : undefined}
-      className={
-        onCard
-          ? `z-30 flex select-none flex-col items-center gap-1.5 rounded-[28px] border border-white/25 bg-black/30 p-2.5 [backdrop-filter:blur(10px)] ${className}`
-          : [
-              "z-40 flex select-none flex-col items-center gap-2",
-              // --- mobile & tablet (< lg): floating glassy dial, bottom-right ---
-              "fixed bottom-[88px] right-3 rounded-[28px] border border-gold/20 bg-white/[0.06] p-2.5 backdrop-blur-md transition-[opacity,transform] duration-300 ease-out",
-              // --- desktop (lg+): inline in the column beside the image card ---
-              "lg:pointer-events-auto lg:static lg:bottom-auto lg:right-auto lg:z-auto lg:translate-y-0 lg:gap-3 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:opacity-100 lg:backdrop-blur-none",
-            ].join(" ")
-      }
+      className={[
+        "z-40 flex select-none flex-col items-center gap-2",
+        // --- mobile & tablet (< lg): floating glassy dial, bottom-right ---
+        "fixed bottom-[88px] right-3 rounded-[28px] border border-gold/20 bg-white/[0.06] p-2.5 backdrop-blur-md transition-[opacity,transform] duration-300 ease-out",
+        // --- desktop (lg+): inline in the column beside the image card ---
+        "lg:pointer-events-auto lg:static lg:bottom-auto lg:right-auto lg:z-auto lg:translate-y-0 lg:gap-3 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:opacity-100 lg:backdrop-blur-none",
+      ].join(" ")}
     >
       <div
-        className={
-          onCard
-            ? "relative h-[140px] w-[140px]"
-            : "relative h-[112px] w-[112px] sm:h-[132px] sm:w-[132px] lg:h-[200px] lg:w-[200px]"
-        }
+        className={`relative h-[112px] w-[112px] sm:h-[132px] sm:w-[132px] ${
+          compact ? "lg:h-[150px] lg:w-[150px]" : "lg:h-[200px] lg:w-[200px]"
+        }`}
       >
         <div className="absolute left-1/2 top-[-2px] z-30 h-0 w-0 -translate-x-1/2 border-l-[9px] border-r-[9px] border-t-[14px] border-l-transparent border-r-transparent border-t-gold drop-shadow-[0_0_6px_rgba(233,201,139,0.9)]" />
 
@@ -323,26 +313,19 @@ export default function MakeoverWheel({
         </div>
       </div>
 
-      {onCard ? (
-        <div className="max-w-[150px] text-center text-white">
-          <p className="truncate font-display text-base leading-tight">
-            {items[value]?.label}
-          </p>
-          <p className="mt-0.5 animate-pulse text-[9px] uppercase tracking-[0.2em] text-white/75">
-            ✨ Spin me
-          </p>
-        </div>
-      ) : (
-        <p className="max-w-[130px] animate-pulse text-center text-[9px] uppercase leading-tight tracking-[0.18em] text-gold/70 lg:max-w-none lg:text-[10px] lg:tracking-[0.28em]">
-          ✨ Spin me to see the transformation
-        </p>
-      )}
+      <p
+        className={`max-w-[130px] animate-pulse text-center text-[9px] uppercase leading-tight tracking-[0.18em] text-gold/70 lg:text-[10px] lg:tracking-[0.28em] ${
+          compact ? "lg:max-w-[170px]" : "lg:max-w-none"
+        }`}
+      >
+        ✨ Spin me to see the transformation
+      </p>
 
       {/* Keyboard shortcut hint — always on tablet/desktop, pulses while spinning */}
-      {!onCard && (
       <div
         className={[
-          "hidden flex-col items-center gap-1.5 text-center transition-all duration-300 lg:flex",
+          "hidden flex-col items-center gap-1.5 text-center transition-all duration-300",
+          compact ? "" : "lg:flex",
           kbSpinning ? "scale-105 opacity-100" : "opacity-70",
         ].join(" ")}
         aria-live="polite"
@@ -371,7 +354,6 @@ export default function MakeoverWheel({
           </p>
         )}
       </div>
-      )}
     </div>
   );
 }

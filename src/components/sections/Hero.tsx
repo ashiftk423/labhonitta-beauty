@@ -78,7 +78,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-[100svh] items-center px-5 pb-16 pt-32 sm:px-6 md:pb-20 md:pt-28"
+      className="relative flex min-h-[100svh] items-center px-5 pb-16 pt-32 sm:px-6 md:pb-20 md:pt-28 lg:pt-24"
     >
       <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1fr_1.02fr] lg:gap-8">
         {/* ---------------- copy ---------------- */}
@@ -155,6 +155,34 @@ export default function Hero() {
               See our work
             </a>
           </motion.div>
+
+          {/* desktop: wheel under the copy (phones get the floating one below) */}
+          <motion.div
+            custom={5}
+            variants={fade}
+            initial="hidden"
+            animate="show"
+            className="mt-6 hidden items-center gap-7 lg:flex"
+          >
+            <MakeoverWheel
+              items={LOOKS}
+              value={active}
+              onChange={setActive}
+              icon="💄"
+              compact
+            />
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.35em] text-rose/80">
+                Bridal lookbook · {active + 1}/{LOOKS.length}
+              </span>
+              <p className="mt-2 font-display text-3xl leading-tight text-gold-gradient">
+                {LOOKS[active]?.label}
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-[0.25em] text-muted-soft">
+                {LOOKS[active]?.tag}
+              </p>
+            </div>
+          </motion.div>
         </div>
 
         {/* ---------------- bridal lookbook card ---------------- */}
@@ -203,7 +231,6 @@ export default function Hero() {
               className="absolute bottom-4 left-4 z-20 lg:bottom-auto lg:top-4"
             />
           </div>
-
           {/* phones & tablets: look name under the photo; the wheel floats like Hair Studio's */}
           <div className="mt-5 text-center lg:hidden">
             <p className="font-display text-2xl leading-none text-gold-gradient">
@@ -213,18 +240,8 @@ export default function Hero() {
               {LOOKS[active]?.tag}
             </p>
           </div>
-          {/* desktop: pinned to the photo's top-right */}
-          <div className="absolute right-5 top-5 z-30 hidden lg:block">
-            <MakeoverWheel
-              items={LOOKS}
-              value={active}
-              onChange={setActive}
-              icon="💄"
-              onCard
-            />
-          </div>
 
-          {/* phones: a row under the wheel · desktop: overlapping the photo's left edge */}
+          {/* phones: a row under the look name · desktop: overlapping the photo's left edge */}
           <div className="mt-5 flex justify-center gap-2 sm:gap-3 lg:absolute lg:left-0 lg:bottom-10 lg:mt-0 lg:flex-col lg:gap-4">
             {HERO_SEALS.map((s) => (
               <Seal key={s.bottom} top={s.top} bottom={s.bottom} />
