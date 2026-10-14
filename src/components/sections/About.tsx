@@ -26,7 +26,7 @@ export default function About() {
           className="order-2 text-center lg:order-1 lg:text-left"
         >
           <span className="text-xs uppercase tracking-[0.4em] text-rose/80">
-            About Labhonitta
+            About Labhonitta by Soumya
           </span>
           <h2 className="mt-4 font-display text-4xl font-light leading-tight text-cream sm:text-5xl">
             Where <span className="text-gold-gradient">Passion</span>

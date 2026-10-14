@@ -83,7 +83,7 @@ export default function Contact() {
             onSubmit={(e) => {
               e.preventDefault();
               const data = new FormData(e.currentTarget);
-              const msg = `Hi Labhonitta! I'd like to book ${data.get("service")}.%0AName: ${data.get("name")}%0ADate: ${data.get("date")}`;
+              const msg = `Hi Labhonitta by Soumya! I'd like to book ${data.get("service")}.%0AName: ${data.get("name")}%0ADate: ${data.get("date")}`;
               window.open(`https://wa.me/919020240426?text=${msg}`, "_blank");
             }}
           >

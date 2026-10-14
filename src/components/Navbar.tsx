@@ -137,9 +137,14 @@ export default function Navbar() {
       className="fixed inset-x-0 top-0 z-50 transform-gpu [backface-visibility:hidden]"
     >
       <nav className="mx-3 mt-3 flex h-12 max-w-6xl items-center justify-between rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-3 [backface-visibility:hidden] min-[400px]:px-4 [transform:translateZ(0)] [backdrop-filter:blur(10px)] md:mx-4 md:mt-4 md:h-14 md:px-7 xl:mx-auto">
-        <a href="#home" className="flex items-center gap-2">
-          <span className="font-display text-xl font-semibold tracking-wide text-gold-gradient md:text-2xl">
-            Labhonitta
+        <a href="#home" aria-label="Labhonitta by Soumya — home" className="flex items-center gap-2">
+          <span className="flex flex-col leading-none">
+            <span className="font-display text-xl font-semibold tracking-wide text-gold-gradient md:text-2xl">
+              Labhonitta
+            </span>
+            <span className="-mt-0.5 self-end font-display text-[13px] italic text-rose md:text-sm">
+              by Soumya
+            </span>
           </span>
           <span className="hidden text-[10px] uppercase tracking-[0.35em] text-rose/70 sm:block lg:hidden xl:block">
             Beauty Parlour

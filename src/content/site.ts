@@ -6,14 +6,14 @@
 import { ABOUT_PHOTO, HERO_PHOTO } from "./works.generated";
 
 export const BUSINESS = {
-  name: "Labhonitta Beauty Parlour",
+  name: "Labhonitta by Soumya",
   tagline: "Makeup Studio & Academy",
   city: "Thrissur",
   region: "Central Kerala",
   phone: "+91 90202 40426",
   phoneHref: "tel:+919020240426",
   whatsapp:
-    "https://wa.me/919020240426?text=Hi%20Labhonitta%2C%20I%27d%20like%20to%20book%20an%20appointment.",
+    "https://wa.me/919020240426?text=Hi%20Labhonitta%20by%20Soumya%2C%20I%27d%20like%20to%20book%20an%20appointment.",
   founder: "Soumya",
   founderRole: "Founder & Chief Makeup Artist",
   address:
@@ -87,7 +87,7 @@ export const SERVICE_STRIP = [
 export const HERO_IMAGE = {
   ...HERO_PHOTO,
   fallback: "/images/bride-after.webp",
-  alt: "Bride in a red Kanjeevaram saree and temple gold jewellery, makeup by Labhonitta",
+  alt: "Bride in a red Kanjeevaram saree and temple gold jewellery, makeup by Soumya at Labhonitta",
 };
 
 export const ABOUT_IMAGE = {

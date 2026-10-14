@@ -19,9 +19,9 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Labhonitta Ladies Beauty Parlour | Bridal Makeup & Salon — Thrissur",
+  title: "Labhonitta by Soumya | Bridal Makeup & Ladies Beauty Parlour — Thrissur",
   description:
-    "Celebrity makeup artist in Thrissur, Kerala — 20+ years of expertise and 1K+ happy brides. Bridal makeup, artist makeup, hair styling & hair treatments at Labhonitta Ladies Beauty Parlour.",
+    "Labhonitta by Soumya — celebrity makeup artist in Thrissur, Kerala with 20+ years of expertise and 1K+ happy brides. Bridal makeup, artist makeup, hair styling & hair treatments.",
   keywords: [
     "bridal makeup Thrissur",
     "beauty parlour Thrissur",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "artist makeup",
   ],
   openGraph: {
-    title: "Labhonitta Ladies Beauty Parlour",
+    title: "Labhonitta by Soumya",
     description:
       "Celebrity makeup artist · 20+ years of expertise · 1K+ happy brides. Bridal & artist makeup, hair styling and treatments in Thrissur.",
     type: "website",

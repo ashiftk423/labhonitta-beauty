@@ -22,6 +22,7 @@ export default function Intro() {
   const contentRef = useRef<HTMLDivElement>(null);
   const lettersRef = useRef<HTMLSpanElement[]>([]);
   const lineRef = useRef<HTMLSpanElement>(null);
+  const signatureRef = useRef<HTMLParagraphElement>(null);
   const ranRef = useRef(false);
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function Intro() {
 
       gsap.set(lettersRef.current, { yPercent: 120, opacity: 0 });
       gsap.set(lineRef.current, { scaleX: 0, transformOrigin: "left center" });
+      gsap.set(signatureRef.current, { opacity: 0, y: 10 });
 
       tl.to(lettersRef.current, {
         yPercent: 0,
@@ -69,7 +71,8 @@ export default function Intro() {
           { scaleX: 1, duration: 0.9, ease: "power2.inOut" },
           "-=0.55"
         )
-        .to({}, { duration: 0.35 })
+        .to(signatureRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.6")
+        .to({}, { duration: 0.45 })
         .to(contentRef.current, {
           opacity: 0,
           y: -24,
@@ -128,6 +131,15 @@ export default function Intro() {
             ))}
           </span>
         </h1>
+
+        <p
+          ref={signatureRef}
+          className={`-mt-3 font-display text-[clamp(1.4rem,5vw,2.5rem)] font-light italic leading-none ${
+            light ? "text-rose" : "text-rosegold"
+          }`}
+        >
+          by Soumya
+        </p>
 
         <span
           ref={lineRef}
