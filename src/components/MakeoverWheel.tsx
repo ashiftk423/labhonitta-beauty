@@ -244,7 +244,14 @@ export default function MakeoverWheel({
       onPointerUp={onCard ? (e) => e.stopPropagation() : undefined}
       className={
         onCard
-          ? `z-30 flex select-none flex-col items-center gap-1.5 rounded-[28px] border border-white/25 bg-black/30 p-2 [backdrop-filter:blur(10px)] lg:p-2.5 ${className}`
+          ? [
+              "z-30 flex select-none items-center [backdrop-filter:blur(10px)]",
+              // phones & tablets: horizontal bar under the photo, in page colours
+              "gap-4 rounded-[26px] border border-gold/25 bg-[color:var(--surface)]/80 p-3 shadow-[0_18px_50px_-25px_rgba(0,0,0,0.45)]",
+              // desktop: compact dark glass dial pinned on the photo
+              "lg:flex-col lg:gap-1.5 lg:rounded-[28px] lg:border-white/25 lg:bg-black/30 lg:p-2.5 lg:shadow-none",
+              className,
+            ].join(" ")
           : [
               "z-40 flex select-none flex-col items-center gap-2",
               // --- mobile & tablet (< lg): floating glassy dial, bottom-right ---
@@ -257,7 +264,7 @@ export default function MakeoverWheel({
       <div
         className={
           onCard
-            ? "relative h-[96px] w-[96px] sm:h-[112px] sm:w-[112px] lg:h-[140px] lg:w-[140px]"
+            ? "relative h-[112px] w-[112px] shrink-0 sm:h-[124px] sm:w-[124px] lg:h-[140px] lg:w-[140px]"
             : "relative h-[112px] w-[112px] sm:h-[132px] sm:w-[132px] lg:h-[200px] lg:w-[200px]"
         }
       >
@@ -324,12 +331,17 @@ export default function MakeoverWheel({
       </div>
 
       {onCard ? (
-        <div className="max-w-[112px] text-center text-white lg:max-w-[150px]">
-          <p className="truncate font-display text-sm leading-tight lg:text-base">
-            {items[value]?.label}
+        <div className="min-w-0 flex-1 text-left lg:max-w-[150px] lg:flex-none lg:text-center">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-rose/80 lg:hidden">
+            Bridal lookbook · {value + 1}/{n}
           </p>
-          <p className="mt-0.5 animate-pulse text-[8px] uppercase tracking-[0.2em] text-white/75 lg:text-[9px]">
-            ✨ Spin me
+          <p className="mt-1 font-display text-xl leading-tight lg:mt-0 lg:truncate lg:text-base">
+            <span className="text-gold-gradient lg:hidden">{items[value]?.label}</span>
+            <span className="hidden text-white lg:inline">{items[value]?.label}</span>
+          </p>
+          <p className="mt-1.5 animate-pulse text-[10px] uppercase tracking-[0.18em] text-muted lg:mt-0.5 lg:text-[9px] lg:tracking-[0.2em] lg:text-white/75">
+            <span className="lg:hidden">✨ Spin the wheel or swipe the photo</span>
+            <span className="hidden lg:inline">✨ Spin me</span>
           </p>
         </div>
       ) : (

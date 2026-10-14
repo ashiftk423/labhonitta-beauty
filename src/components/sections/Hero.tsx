@@ -50,9 +50,9 @@ function Ornament() {
 
 function Seal({ top, bottom }: { top: string; bottom: string }) {
   return (
-    <div className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-full border border-gold/45 bg-[color:var(--surface)]/85 px-3 text-center shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] [backdrop-filter:blur(10px)] md:h-[126px] md:w-[126px]">
+    <div className="flex h-[88px] w-[88px] flex-col items-center justify-center rounded-full border border-gold/45 bg-[color:var(--surface)]/85 px-2 text-center sm:h-[104px] sm:w-[104px] sm:px-3 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] [backdrop-filter:blur(10px)] md:h-[126px] md:w-[126px]">
       {top && (
-        <span className="font-display text-2xl leading-none text-gold-gradient md:text-3xl">
+        <span className="font-display text-xl leading-none text-gold-gradient sm:text-2xl md:text-3xl">
           {top}
         </span>
       )}
@@ -80,7 +80,7 @@ export default function Hero() {
     >
       <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1fr_1.02fr] lg:gap-8">
         {/* ---------------- copy ---------------- */}
-        <div className="relative z-20 order-2 text-center lg:order-1 lg:text-left">
+        <div className="relative z-20 order-1 text-center lg:text-left">
           <motion.p
             custom={0}
             variants={fade}
@@ -160,7 +160,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative order-1 lg:order-2"
+          className="relative order-2"
         >
           <div
             {...swipe}
@@ -197,20 +197,22 @@ export default function Hero() {
               index={active}
               count={LOOKS.length}
               onStep={step}
-              className="absolute left-4 top-4 z-20"
-            />
-            <MakeoverWheel
-              items={LOOKS}
-              value={active}
-              onChange={setActive}
-              icon="💄"
-              onCard
-              className="absolute bottom-[84px] right-3 sm:bottom-[92px] lg:bottom-auto lg:right-5 lg:top-5"
+              className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2 lg:bottom-auto lg:left-4 lg:top-4 lg:translate-x-0"
             />
           </div>
 
-          {/* seals overlap the bottom-left corner of the photo */}
-          <div className="absolute -bottom-7 left-1/2 flex -translate-x-1/2 gap-3 lg:left-auto lg:right-auto lg:-left-14 lg:bottom-10 lg:translate-x-0 lg:flex-col lg:gap-4">
+          {/* phones: bar under the photo · desktop: pinned to the photo's top-right */}
+          <MakeoverWheel
+            items={LOOKS}
+            value={active}
+            onChange={setActive}
+            icon="💄"
+            onCard
+            className="mx-auto mt-4 w-full max-w-[420px] lg:absolute lg:right-5 lg:top-5 lg:mt-0 lg:w-auto lg:max-w-none"
+          />
+
+          {/* phones: a row under the wheel · desktop: overlapping the photo's left edge */}
+          <div className="mt-5 flex justify-center gap-2 sm:gap-3 lg:absolute lg:left-0 lg:bottom-10 lg:mt-0 lg:flex-col lg:gap-4">
             {HERO_SEALS.map((s) => (
               <Seal key={s.bottom} top={s.top} bottom={s.bottom} />
             ))}
