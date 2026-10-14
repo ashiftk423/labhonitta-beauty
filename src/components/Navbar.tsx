@@ -3,6 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/lib/theme";
+import { BUSINESS } from "@/content/site";
+import { InstagramIcon, PhoneIcon, PinIcon } from "@/components/icons";
+
+const QUICK_ACTIONS = [
+  { label: "Call us", href: BUSINESS.phoneHref, Icon: PhoneIcon, external: false },
+  { label: "Find us on Google Maps", href: BUSINESS.mapsUrl, Icon: PinIcon, external: true },
+  { label: "Follow us on Instagram", href: BUSINESS.instagramUrl, Icon: InstagramIcon, external: true },
+];
 
 const LINKS = [
   { label: "Home", href: "#home" },
@@ -25,7 +33,7 @@ function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       title={isDark ? "Light mode" : "Dark mode"}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/25 text-cream transition hover:border-gold/50 hover:bg-white/5"
+      className="flex h-8 w-8 shrink-0 md:h-9 md:w-9 items-center justify-center rounded-full border border-gold/25 text-cream transition hover:border-gold/50 hover:bg-white/5"
     >
       {isDark ? (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -128,7 +136,7 @@ export default function Navbar() {
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-x-0 top-0 z-50 transform-gpu [backface-visibility:hidden]"
     >
-      <nav className="mx-3 mt-3 flex h-12 max-w-6xl items-center justify-between rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-4 [backface-visibility:hidden] [transform:translateZ(0)] [backdrop-filter:blur(10px)] md:mx-4 md:mt-4 md:h-14 md:px-7 xl:mx-auto">
+      <nav className="mx-3 mt-3 flex h-12 max-w-6xl items-center justify-between rounded-full border border-gold/15 bg-[color:var(--nav-bg)] px-3 [backface-visibility:hidden] min-[400px]:px-4 [transform:translateZ(0)] [backdrop-filter:blur(10px)] md:mx-4 md:mt-4 md:h-14 md:px-7 xl:mx-auto">
         <a href="#home" className="flex items-center gap-2">
           <span className="font-display text-xl font-semibold tracking-wide text-gold-gradient md:text-2xl">
             Labhonitta
@@ -138,7 +146,7 @@ export default function Navbar() {
           </span>
         </a>
 
-        <ul className="hidden items-center gap-5 lg:flex xl:gap-7">
+        <ul className="hidden items-center gap-4 lg:flex xl:gap-7">
           {LINKS.map((l) => (
             <li key={l.href}>
               <a
@@ -154,13 +162,28 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-1.5 md:gap-3 lg:gap-2 xl:gap-3">
+          <ul className="flex items-center gap-1 md:gap-1.5">
+            {QUICK_ACTIONS.map(({ label, href, Icon, external }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  aria-label={label}
+                  title={label}
+                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/25 text-gold transition hover:border-gold/60 hover:bg-white/5 md:h-9 md:w-9"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              </li>
+            ))}
+          </ul>
           <ThemeToggle />
           <a
             href="#contact"
-            className="rounded-full bg-gradient-to-r from-rosegold to-rose px-4 py-2 text-xs font-medium text-ink transition-transform hover:scale-105 md:px-5 md:text-sm"
+            className="whitespace-nowrap rounded-full bg-gradient-to-r from-rosegold to-rose px-3 py-2 text-xs font-medium text-ink transition-transform hover:scale-105 md:px-5 md:text-sm"
           >
-            Book Now
+            Book<span className="hidden min-[400px]:inline"> Now</span>
           </a>
         </div>
       </nav>
