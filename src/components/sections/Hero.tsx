@@ -8,6 +8,7 @@ import MakeoverWheel, { type WheelItem } from "@/components/MakeoverWheel";
 import SwipeNav from "@/components/SwipeNav";
 import { isNear } from "@/lib/isNear";
 import { useSwipe } from "@/lib/useSwipe";
+import { useFloatingVisibility } from "@/lib/useFloatingVisibility";
 
 const LOOKS = getBridalLooks() as (WheelItem & {
   src: string;
@@ -72,6 +73,7 @@ export default function Hero() {
   const step = (dir: 1 | -1) =>
     setActive((i) => (i + dir + LOOKS.length) % LOOKS.length);
   const swipe = useSwipe(step);
+  const { ref: cardRef, visibility } = useFloatingVisibility<HTMLDivElement>();
 
   return (
     <section
@@ -163,6 +165,7 @@ export default function Hero() {
           className="relative order-2"
         >
           <div
+            ref={cardRef}
             {...swipe}
             className="relative mx-auto aspect-[4/5] w-full max-w-[420px] touch-pan-y select-none overflow-hidden rounded-[2rem] border border-gold/25 bg-plum shadow-[0_40px_120px_-40px_rgba(0,0,0,0.55)] sm:aspect-[3/4] lg:max-w-none lg:rounded-[2.5rem]"
           >
@@ -197,19 +200,29 @@ export default function Hero() {
               index={active}
               count={LOOKS.length}
               onStep={step}
-              className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2 lg:bottom-auto lg:left-4 lg:top-4 lg:translate-x-0"
+              className="absolute bottom-4 left-4 z-20 lg:bottom-auto lg:top-4"
             />
           </div>
 
-          {/* phones: bar under the photo · desktop: pinned to the photo's top-right */}
-          <MakeoverWheel
-            items={LOOKS}
-            value={active}
-            onChange={setActive}
-            icon="💄"
-            onCard
-            className="mx-auto mt-4 w-full max-w-[420px] lg:absolute lg:right-5 lg:top-5 lg:mt-0 lg:w-auto lg:max-w-none"
-          />
+          {/* phones & tablets: look name under the photo; the wheel floats like Hair Studio's */}
+          <div className="mt-5 text-center lg:hidden">
+            <p className="font-display text-2xl leading-none text-gold-gradient">
+              {LOOKS[active]?.label}
+            </p>
+            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-muted-soft">
+              {LOOKS[active]?.tag}
+            </p>
+          </div>
+          {/* desktop: pinned to the photo's top-right */}
+          <div className="absolute right-5 top-5 z-30 hidden lg:block">
+            <MakeoverWheel
+              items={LOOKS}
+              value={active}
+              onChange={setActive}
+              icon="💄"
+              onCard
+            />
+          </div>
 
           {/* phones: a row under the wheel · desktop: overlapping the photo's left edge */}
           <div className="mt-5 flex justify-center gap-2 sm:gap-3 lg:absolute lg:left-0 lg:bottom-10 lg:mt-0 lg:flex-col lg:gap-4">
@@ -218,6 +231,17 @@ export default function Hero() {
             ))}
           </div>
         </motion.div>
+      </div>
+
+      {/* Outside the scaled card wrapper so `position: fixed` stays tied to the screen */}
+      <div className="lg:hidden">
+        <MakeoverWheel
+          items={LOOKS}
+          value={active}
+          onChange={setActive}
+          icon="💄"
+          visibility={visibility}
+        />
       </div>
     </section>
   );
